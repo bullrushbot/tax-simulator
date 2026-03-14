@@ -3569,11 +3569,15 @@ function downloadPdf(btn) {
   const wrapper = document.createElement('div');
   wrapper.style.cssText = [
     'background:#ffffff',
+    'position:absolute',
+    'left:0',
+    'top:0',
     'color:#0f172a',
     'font-family:Arial,sans-serif',
     'padding:24px',
     'width:800px',          // A4 기준
     'box-sizing:border-box',
+    'z-index:-9999',
   ].join(';');
 
   // 헤더
@@ -3657,7 +3661,7 @@ function downloadPdf(btn) {
     margin:       [10, 10, 10, 10],
     filename:     fileName,
     image:        { type:'jpeg', quality:1.0 },
-    html2canvas:  { scale:2, useCORS:true, logging:false, windowWidth:800 },
+    html2canvas: { scale:2, useCORS:true, logging:false, windowWidth:800, scrollX:0, scrollY:0 },  
     jsPDF:        { unit:'mm', format:'a4', orientation:'portrait' },
     pagebreak:    { mode:['avoid-all','css','legacy'] },
   }).from(wrapper).save().then(function(){
