@@ -3567,18 +3567,7 @@ function downloadPdf(btn) {
 
   // PDF용 임시 래퍼 생성 (흰 배경 + 전체 높이)
   const wrapper = document.createElement('div');
-  wrapper.style.cssText = [
-    'background:#ffffff',
-    'position:absolute',
-    'left:0',
-    'top:0',
-    'color:#0f172a',
-    'font-family:Arial,sans-serif',
-    'padding:24px',
-    'width:800px',          // A4 기준
-    'box-sizing:border-box',
-    'z-index:-9999',
-  ].join(';');
+  wrapper.style.cssText = 'position:absolute; top:0; left:0; z-index:999999; background:#ffffff; color:#0f172a; font-family:Arial,sans-serif; padding:24px; width:800px; box-sizing:border-box;';
 
   // 헤더
   const dateStr = new Date().toLocaleDateString('ko-KR',{year:'numeric',month:'long',day:'numeric'});
@@ -3656,17 +3645,12 @@ function downloadPdf(btn) {
 
   const tabNames = {'panel-gift':'부담부증여','panel-own':'본인보유','panel-compare':'시나리오비교'};
   const fileName = `부동산절세분석_${tabNames[tabId]||'결과'}_${new Date().toISOString().slice(0,10)}.pdf`;
-
+  window.scrollTo(0, 0);
   html2pdf().set({
     margin:       [10, 10, 10, 10],
     filename:     fileName,
     image:        { type:'jpeg', quality:1.0 },
-    html2canvas: { scale:2, useCORS:true, logging:false, windowWidth:800, x:0, y:0,
-      onclone: function(doc) {
-        doc.documentElement.style.setProperty('overflow','visible','important');
-        doc.body.style.setProperty('overflow','visible','important');
-      }
-    },
+    html2canvas: { scale:2, useCORS:true, logging:false, windowWidth:800},
     jsPDF:        { unit:'mm', format:'a4', orientation:'portrait' },
     pagebreak:    { mode:['avoid-all','css','legacy'] },
   }).from(wrapper).save().then(function(){
