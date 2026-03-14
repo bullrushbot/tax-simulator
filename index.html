@@ -3502,7 +3502,7 @@ async function downloadDocx(btn) {
     ].join('');
 
     const docXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<w:document xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" mc:Ignorable="w14 w15">
+<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
 <w:body>${body}<w:sectPr><w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="1000" w:right="1000" w:bottom="1000" w:left="1000" w:header="708" w:footer="708" w:gutter="0"/></w:sectPr></w:body></w:document>`;
 
     const settingsXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:settings xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:compat><w:compatSetting w:name="compatibilityMode" w:uri="http://schemas.microsoft.com/office/word" w:val="15"/></w:compat></w:settings>`;
@@ -3546,123 +3546,106 @@ function downloadPdf(btn) {
     if(el && el.style.display !== 'none'){ activePanel = el; break; }
   }
   if(!activePanel) return;
+  if(typeof html2pdf === 'undefined'){ window.print(); return; }
 
-  // html2pdf.js 사용 가능 시 고품질 PDF, 불가 시 window.print() 폴백
-  if(typeof html2pdf === 'undefined'){
-    // 폴백: 브라우저 인쇄
-    const printDoc = document.getElementById('pdf-print-doc');
-    printDoc.innerHTML = '';
-    const clone = activePanel.cloneNode(true);
-    clone.style.cssText = 'display:block;width:100%;height:auto;overflow:visible;max-height:none;padding:0;';
-    printDoc.appendChild(clone);
-    window.print();
-    setTimeout(function(){ printDoc.innerHTML = ''; }, 1200);
-    return;
-  }
-
-  // ── html2pdf 고품질 PDF 생성 ──
-  // 버튼 로딩 상태
   const origText = btn ? btn.innerHTML : '';
   if(btn){ btn.innerHTML = '⏳ 생성 중...'; btn.disabled = true; }
 
-  // PDF용 임시 래퍼 생성 (흰 배경 + 전체 높이)
-  const wrapper = document.createElement('div');
-  wrapper.style.cssText = 'position:absolute; top:0; left:0; z-index:999999; background:#ffffff; color:#0f172a; font-family:Arial,sans-serif; padding:24px; width:800px; box-sizing:border-box;';
-
-  // 헤더
-  const dateStr = new Date().toLocaleDateString('ko-KR',{year:'numeric',month:'long',day:'numeric'});
-  wrapper.innerHTML = `
-    <div style="border-bottom:2px solid #0d1b36;padding-bottom:12px;margin-bottom:16px">
-      <div style="font-size:10px;font-weight:700;letter-spacing:2px;color:#d4a843;text-transform:uppercase;margin-bottom:4px">TAX OPTIMIZATION SIMULATOR</div>
-      <div style="font-size:20px;font-weight:800;color:#0d1b36">부동산 절세 시나리오 분석기</div>
-      <div style="font-size:11px;color:#64748b;margin-top:3px">출력일: ${dateStr} · 참고용 자료 · 실제 세액은 세무사와 상담 필요</div>
-    </div>`;
-
-  // 현재 탭 주요 수치 텍스트로 추출
-  const tabId = activePanel.id; // panel-gift / panel-own / panel-compare
-  const rows = activePanel.querySelectorAll('.rrow, .rrow.alt, .rrow.total');
-  const table = document.createElement('table');
-  table.style.cssText = 'width:100%;border-collapse:collapse;font-size:12px;';
-
-  // 탭 제목
+  const tabId = activePanel.id;
   const tabTitles = {'panel-gift':'🎁 부담부증여 시나리오','panel-own':'🏠 본인 보유 직접 양도','panel-compare':'📊 시나리오 비교 분석'};
-  const titleEl = document.createElement('div');
-  titleEl.style.cssText = 'font-size:14px;font-weight:700;color:#0d1b36;margin-bottom:12px;padding:8px 12px;background:#f1f5f9;border-radius:6px;';
-  titleEl.textContent = tabTitles[tabId] || '분석 결과';
-  wrapper.appendChild(titleEl);
+  const tabNames  = {'panel-gift':'부담부증여','panel-own':'본인보유','panel-compare':'시나리오비교'};
+  const dateStr   = new Date().toLocaleDateString('ko-KR',{year:'numeric',month:'long',day:'numeric'});
+  const fileName  = '부동산절세분석_'+(tabNames[tabId]||'결과')+'_'+new Date().toISOString().slice(0,10)+'.pdf';
+  const PBI = 'page-break-inside:avoid;break-inside:avoid;';
 
-  // 비교탭은 테이블 직접 복사
+  // float + % 레이아웃 (table/flex 버그 방지)
+  let contentHtml = '';
   if(tabId === 'panel-compare'){
-    const ctbl = activePanel.querySelector('.ctbl');
-    if(ctbl){
-      const ctblClone = ctbl.cloneNode(true);
-      ctblClone.style.cssText = 'width:100%;border-collapse:collapse;font-size:12px;margin-bottom:12px;';
-      ctblClone.querySelectorAll('th,td').forEach(el=>{
-        el.style.cssText = 'border:1px solid #e2e8f0;padding:6px 10px;text-align:left;';
-      });
-      ctblClone.querySelectorAll('th').forEach(el=>{ el.style.background='#0d1b36';el.style.color='#fff'; });
-      wrapper.appendChild(ctblClone);
-    }
-  }
-
-  // rows 데이터 → 테이블 행
-  rows.forEach(rrow=>{
-    const lbl = rrow.querySelector('.rl')?.textContent?.trim();
-    const val = rrow.querySelector('.rv')?.textContent?.trim();
-    if(!lbl || !val) return;
-    const tr = table.insertRow();
-    const isTotal = rrow.classList.contains('total');
-    tr.style.cssText = isTotal ? 'background:#0d1b36;color:#fff;font-weight:700' : (rrow.classList.contains('alt')?'background:#f8fafc':'');
-    const tdL = tr.insertCell(); tdL.textContent = lbl;
-    tdL.style.cssText = 'padding:5px 10px;border-bottom:1px solid #e2e8f0;width:65%;'+(isTotal?'color:#fff':'');
-    const tdV = tr.insertCell(); tdV.textContent = val;
-    tdV.style.cssText = 'padding:5px 10px;border-bottom:1px solid #e2e8f0;text-align:right;font-weight:600;'+(isTotal?'color:#fbbf24':'');
-  });
-  wrapper.appendChild(table);
-
-  // 인사이트
-  const insRows = activePanel.querySelectorAll('.insight-row, .ins-row');
-  if(insRows.length > 0){
-    const insDiv = document.createElement('div');
-    insDiv.style.cssText = 'margin-top:16px;padding:12px;background:#f8fafc;border-radius:6px;border-left:3px solid #d4a843;';
-    insDiv.innerHTML = '<div style="font-size:11px;font-weight:700;color:#d4a843;margin-bottom:8px">💡 전략 인사이트</div>';
-    insRows.forEach(row=>{
-      const p = document.createElement('div');
-      p.style.cssText = 'font-size:11px;color:#334155;margin-bottom:4px;line-height:1.5;';
-      p.textContent = row.textContent.trim();
-      insDiv.appendChild(p);
+    contentHtml += '<div style="width:100%;border:1px solid #e2e8f0;border-radius:6px;overflow:hidden;margin-bottom:16px;">';
+    contentHtml += '<div style="background:#0d1b36;color:#fff;font-weight:700;font-size:13px;padding:12px 16px;overflow:hidden;'+PBI+'">'+
+      '<div style="float:left;width:35%;box-sizing:border-box;">항목</div>'+
+      '<div style="float:left;width:22%;text-align:right;box-sizing:border-box;">🎁 부담부증여</div>'+
+      '<div style="float:left;width:22%;text-align:right;box-sizing:border-box;">🏠 본인 보유</div>'+
+      '<div style="float:left;width:21%;text-align:right;box-sizing:border-box;">차이</div></div>';
+    const trs=activePanel.querySelectorAll('.ctbl tbody tr,.ctbl tr');
+    trs.forEach(function(tr,idx){
+      const tds=tr.querySelectorAll('td');
+      if(tds.length<2) return;
+      const isTot=tr.classList.contains('ctot');
+      const bg=isTot?'#f1f5f9':(idx%2!==0?'#f8fafc':'#fff');
+      const fw=isTot?'800':'400';
+      const fz=isTot?'14px':'13px';
+      const getCell=function(td,w){
+        let c='#0f172a';
+        if(td.classList.contains('worse'))c='#ef4444';
+        else if(td.classList.contains('better'))c='#2563eb';
+        else if(td.classList.contains('neutral'))c='#64748b';
+        const fw2=(c!=='#0f172a'&&c!=='#64748b')?'700':(isTot?'800':'400');
+        return '<div style="float:left;width:'+w+';text-align:right;font-weight:'+fw2+';color:'+c+';box-sizing:border-box;">'+td.textContent.trim()+'</div>';
+      };
+      contentHtml+='<div style="background:'+bg+';border-top:1px solid #e2e8f0;font-size:'+fz+';padding:12px 16px;color:#0f172a;overflow:hidden;'+PBI+'">'+
+        '<div style="float:left;width:35%;font-weight:'+fw+';box-sizing:border-box;">'+(tds[0]?tds[0].textContent.trim():'')+'</div>'+
+        (tds[1]?getCell(tds[1],'22%'):'')+
+        (tds[2]?getCell(tds[2],'22%'):'')+
+        (tds[3]?getCell(tds[3],'21%'):'')+
+        '</div>';
     });
-    wrapper.appendChild(insDiv);
+    contentHtml+='</div>';
+    const verdict=activePanel.querySelector('.verdict');
+    if(verdict) contentHtml+='<div style="font-size:14px;font-weight:800;padding:14px 18px;border-radius:8px;margin-bottom:16px;background:#f0fdf4;border:1px solid #bbf7d0;color:#16a34a;'+PBI+'">'+verdict.innerHTML+'</div>';
+  } else {
+    contentHtml += '<div style="width:100%;border:1px solid #e2e8f0;border-radius:6px;overflow:hidden;margin-bottom:16px;">';
+    activePanel.querySelectorAll('.rrow').forEach(function(rrow,idx){
+      const lbl=rrow.querySelector('.rl')?rrow.querySelector('.rl').textContent.trim():'';
+      const valEl=rrow.querySelector('.rv');
+      const val=valEl?valEl.textContent.trim():'';
+      if(!lbl||!val) return;
+      const iT=rrow.classList.contains('total'),iA=rrow.classList.contains('alt');
+      let vc=iT?'#fbbf24':'#0f172a';
+      if(!iT&&valEl){if(valEl.classList.contains('red'))vc='#ef4444';else if(valEl.classList.contains('green'))vc='#22c55e';else if(valEl.classList.contains('orange'))vc='#f97316';else if(valEl.classList.contains('gold'))vc='#d4a843';else if(valEl.classList.contains('muted'))vc='#64748b';}
+      const bg=iT?'#0d1b36':(iA?'#f8fafc':'#ffffff');
+      const colorL=iT?'#ffffff':'#475569';
+      contentHtml+='<div style="background:'+bg+';border-top:'+(idx===0?'none':'1px solid #e2e8f0')+';padding:12px 16px;overflow:hidden;'+PBI+'">'+
+        '<div style="float:left;width:60%;font-size:14px;font-weight:'+(iT?'700':'400')+';color:'+colorL+';box-sizing:border-box;">'+lbl+'</div>'+
+        '<div style="float:left;width:40%;font-size:14px;font-weight:'+(iT?'800':'700')+';color:'+vc+';text-align:right;box-sizing:border-box;">'+val+'</div>'+
+        '</div>';
+    });
+    contentHtml+='</div>';
+  }
+  let insHtml='';
+  const insArr=[];
+  activePanel.querySelectorAll('.insight-row,.ins-row').forEach(function(r){const t=r.textContent.trim();if(t)insArr.push(t);});
+  if(insArr.length){
+    insHtml='<div style="margin-top:16px;padding:16px;background:#f8fafc;border-radius:8px;border-left:4px solid #d4a843;'+PBI+'">'+
+      '<div style="font-size:14px;font-weight:700;color:#d4a843;margin-bottom:10px;">💡 전략 인사이트</div>'+
+      insArr.map(function(t){return '<div style="font-size:13px;color:#334155;margin-bottom:6px;line-height:1.6;">'+t+'</div>';}).join('')+'</div>';
   }
 
-  // 면책조항
-  const disc = document.createElement('div');
-  disc.style.cssText = 'margin-top:16px;padding:10px;background:#fef3c7;border-radius:6px;font-size:10px;color:#92400e;line-height:1.6;';
-  disc.textContent = '⚠ 본 시뮬레이션 결과는 참고용 데이터입니다. 세법 해석, 특례 적용 여부에 따라 실제 산출 세액과 차이가 발생할 수 있습니다. 반드시 전문 세무사와 상담하시기 바랍니다. © 2025 HAN. All rights reserved.';
-  wrapper.appendChild(disc);
+  const finalHtmlString =
+    '<div style="width:800px;padding:40px;background:#ffffff;color:#0f172a;text-align:left;'+
+    'font-family:\'Apple SD Gothic Neo\',\'Malgun Gothic\',sans-serif;box-sizing:border-box;margin:0;">'+
+      '<div style="border-bottom:2px solid #0d1b36;padding-bottom:12px;margin-bottom:20px;'+PBI+'">'+
+        '<div style="font-size:12px;font-weight:700;letter-spacing:2px;color:#d4a843;margin-bottom:4px;">TAX OPTIMIZATION SIMULATOR</div>'+
+        '<div style="font-size:24px;font-weight:800;color:#0d1b36;">부동산 절세 시나리오 분석기</div>'+
+        '<div style="font-size:12px;color:#64748b;margin-top:6px;">출력일: '+dateStr+' · 참고용 자료 · 실제 세액은 세무사와 상담 필요</div>'+
+      '</div>'+
+      '<div style="font-size:16px;font-weight:700;color:#0d1b36;margin-bottom:16px;padding:12px 16px;background:#f1f5f9;border-radius:6px;'+PBI+'">'+(tabTitles[tabId]||'분석 결과')+'</div>'+
+      contentHtml+insHtml+
+      '<div style="margin-top:20px;padding:12px;background:#fef3c7;border-radius:8px;font-size:11px;color:#92400e;line-height:1.6;'+PBI+'">'+
+        '⚠ 본 시뮬레이션 결과는 참고용 데이터입니다. 세법 해석, 특례 적용 여부에 따라 실제 산출 세액과 차이가 발생할 수 있습니다. 반드시 전문 세무사와 상담하시기 바랍니다. © 2025 HAN. All rights reserved.</div>'+
+    '</div>';
 
-  document.body.appendChild(wrapper);
-
-  const tabNames = {'panel-gift':'부담부증여','panel-own':'본인보유','panel-compare':'시나리오비교'};
-  const fileName = `부동산절세분석_${tabNames[tabId]||'결과'}_${new Date().toISOString().slice(0,10)}.pdf`;
-  window.scrollTo(0, 0);
   html2pdf().set({
-    margin:       [10, 10, 10, 10],
-    filename:     fileName,
-    image:        { type:'jpeg', quality:1.0 },
-    html2canvas: { scale:2, useCORS:true, logging:false, windowWidth:800},
-    jsPDF:        { unit:'mm', format:'a4', orientation:'portrait' },
-    pagebreak:    { mode:['avoid-all','css','legacy'] },
-  }).from(wrapper).save().then(function(){
-    document.body.removeChild(wrapper);
-    if(btn){ btn.innerHTML = origText; btn.disabled = false; }
-  }).catch(function(err){
-    console.error('html2pdf error:', err);
-    document.body.removeChild(wrapper);
-    if(btn){ btn.innerHTML = origText; btn.disabled = false; }
-    // 에러 시 폴백
-    window.print();
-  });
+    margin:[10,0,10,0],
+    filename:fileName,
+    image:{type:'jpeg',quality:1.0},
+    // x:0,y:0 — 캡처 시작 좌표 강제 고정 (왼쪽 잘림 완전 해결)
+    html2canvas:{scale:2,useCORS:true,logging:false,windowWidth:800,width:800,x:0,y:0},
+    jsPDF:{unit:'mm',format:'a4',orientation:'portrait'},
+    pagebreak:{mode:['avoid-all','css','legacy']},
+  }).from(finalHtmlString).save()
+    .then(function(){if(btn){btn.innerHTML=origText;btn.disabled=false;}})
+    .catch(function(e){console.error('pdf:',e);if(btn){btn.innerHTML=origText;btn.disabled=false;}});
 }
 
 function closePdfModal() {
