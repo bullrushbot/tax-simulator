@@ -3572,7 +3572,7 @@ function downloadPdf(btn) {
     'color:#0f172a',
     'font-family:Arial,sans-serif',
     'padding:24px',
-    'width:794px',          // A4 기준
+    'width:800px',          // A4 기준
     'box-sizing:border-box',
   ].join(';');
 
@@ -3656,8 +3656,8 @@ function downloadPdf(btn) {
   html2pdf().set({
     margin:       [10, 10, 10, 10],
     filename:     fileName,
-    image:        { type:'jpeg', quality:0.95 },
-    html2canvas:  { scale:2, useCORS:true, logging:false },
+    image:        { type:'jpeg', quality:1.0 },
+    html2canvas:  { scale:2, useCORS:true, logging:false, windowWidth:800 },
     jsPDF:        { unit:'mm', format:'a4', orientation:'portrait' },
     pagebreak:    { mode:['avoid-all','css','legacy'] },
   }).from(wrapper).save().then(function(){
