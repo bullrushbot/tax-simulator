@@ -3661,7 +3661,12 @@ function downloadPdf(btn) {
     margin:       [10, 10, 10, 10],
     filename:     fileName,
     image:        { type:'jpeg', quality:1.0 },
-    html2canvas: { scale:2, useCORS:true, logging:false, windowWidth:800, scrollX:0, scrollY:0 },  
+    html2canvas: { scale:2, useCORS:true, logging:false, windowWidth:800, x:0, y:0,
+      onclone: function(doc) {
+        doc.documentElement.style.setProperty('overflow','visible','important');
+        doc.body.style.setProperty('overflow','visible','important');
+      }
+    },
     jsPDF:        { unit:'mm', format:'a4', orientation:'portrait' },
     pagebreak:    { mode:['avoid-all','css','legacy'] },
   }).from(wrapper).save().then(function(){
