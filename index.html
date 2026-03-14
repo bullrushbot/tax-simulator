@@ -1814,7 +1814,7 @@ input[type=range]::-webkit-slider-thumb {
         <div class="note" id="note-reg">지정: 유상 8% · 무상 12%</div>
       </div>
       <div class="ctrl">
-        <div class="ctrl-label"><span>수증자(배우자) 취득 후 주택 수<span class="tip-wrap"><span class="tip-icon">?</span><span class="tip-box">이 주택 취득 후 수증자가 보유할 주택 수 기준.<br>인별 판단 — 배우자 본인 명의만 카운트합니다.<br>세대원(본인) 주택 수와 무관.</span></span></span></div>
+        <div class="ctrl-label"><span>수증자 취득 후 주택 수<span class="tip-wrap"><span class="tip-icon">?</span><span class="tip-box">이 주택 취득 후 수증자가 보유할 주택 수 기준.<br>인별 판단 — 배우자 본인 명의만 카운트합니다.<br>세대원(본인) 주택 수와 무관.</span></span></span></div>
         <div class="tgrp">
           <button class="tbtn green" onclick="tog('whouse','w1',this)">1주택</button>
           <button class="tbtn on red" onclick="tog('whouse','w2',this)">2주택</button>
@@ -1847,7 +1847,7 @@ input[type=range]::-webkit-slider-thumb {
         </div>
       </div>
 
-      <div class="sec-title">📈 배우자 미래 양도세 (참고용)</div>
+      <div class="sec-title">📈 <span id="lbl-future-title">수증자</span> 미래 양도세 (참고용)</div>
       <div class="ctrl">
         <div class="ctrl-label"><span>보유 기간</span><span class="ctrl-val" id="v-wh">—</span></div>
         <input type="range" id="sl-wh" min="1" max="30" step="1" value="10">
@@ -1957,7 +1957,7 @@ input[type=range]::-webkit-slider-thumb {
       <div class="th-left">
         <div class="th-eyebrow" style="color:rgba(212,168,67,.7)">부담부증여 · 등기 시점 확정 세금</div>
         <div class="th-total" id="banner-total">—</div>
-        <div class="th-sub" id="banner-desc">본인 양도세 + 배우자 증여세 + 배우자 취득세</div>
+        <div class="th-sub" id="banner-desc">본인 양도세 + 수증자 증여세 + 수증자 취득세</div>
       </div>
       <div class="th-right">
         <div class="th-badge" style="background:rgba(212,168,67,.2);color:#f0c866">즉시 현금 필요</div>
@@ -2002,12 +2002,12 @@ input[type=range]::-webkit-slider-thumb {
         <div class="sc-sub">채무 인수분 유상양도</div>
       </div>
       <div class="sum-card c-orange">
-        <div class="sc-lbl">배우자 증여세</div>
+        <div class="sc-lbl" id="lbl-sc-gift">수증자 증여세</div>
         <div class="sc-val orange" id="s-g">—</div>
-        <div class="sc-sub" id="s-g-sub">배우자 공제 후</div>
+        <div class="sc-sub" id="s-g-sub">수증자 공제 후</div>
       </div>
       <div class="sum-card c-blue">
-        <div class="sc-lbl">배우자 취득세</div>
+        <div class="sc-lbl" id="lbl-sc-acq">수증자 취득세</div>
         <div class="sc-val blue" id="s-a">—</div>
         <div class="sc-sub">등기·감평비 포함</div>
       </div>
@@ -2024,17 +2024,17 @@ input[type=range]::-webkit-slider-thumb {
     </div>
 
     <div class="rsec">
-      <div class="rhdr"><span class="rhdr-title">Phase 2 &nbsp;·&nbsp; 배우자 증여세 (순증여액 기준)</span><span class="badge" id="b-g" style="background:rgba(234,88,12,.2);color:#fdba74">계산 중</span></div>
+      <div class="rhdr"><span class="rhdr-title">Phase 2 &nbsp;·&nbsp; <span id="lbl-phase2">수증자</span> 증여세 (순증여액 기준)</span><span class="badge" id="b-g" style="background:rgba(234,88,12,.2);color:#fdba74">계산 중</span></div>
       <div id="rows-g"></div>
     </div>
 
     <div class="rsec">
-      <div class="rhdr"><span class="rhdr-title">Phase 3 &nbsp;·&nbsp; 배우자 취득세 (유상분 + 무상분)</span><span class="badge" id="b-a" style="background:rgba(37,99,235,.2);color:#93c5fd">계산 중</span></div>
+      <div class="rhdr"><span class="rhdr-title">Phase 3 &nbsp;·&nbsp; <span id="lbl-phase3">수증자</span> 취득세 (유상분 + 무상분)</span><span class="badge" id="b-a" style="background:rgba(37,99,235,.2);color:#93c5fd">계산 중</span></div>
       <div id="rows-a"></div>
     </div>
 
     <div class="rsec">
-      <div class="rhdr"><span class="rhdr-title">Phase 4 &nbsp;·&nbsp; 배우자 미래 양도세 (참고 — 즉시 현금 불필요)</span><span class="badge" id="b-w" style="background:rgba(22,163,74,.2);color:#86efac">참고</span></div>
+      <div class="rhdr"><span class="rhdr-title">Phase 4 &nbsp;·&nbsp; <span id="lbl-phase4">수증자</span> 미래 양도세 (참고 — 즉시 현금 불필요)</span><span class="badge" id="b-w" style="background:rgba(22,163,74,.2);color:#86efac">참고</span></div>
       <div id="rows-w"></div>
     </div>
 
@@ -2164,12 +2164,12 @@ input[type=range]::-webkit-slider-thumb {
               </div>
             </div>
             <div class="ctrl">
-              <div class="ctrl-label"><span>배우자 보유기간</span><span class="ctrl-val" id="cv-wh">—</span></div>
+              <div class="ctrl-label"><span id="lbl-wh">배우자</span> 보유기간<span class="ctrl-val" id="cv-wh">—</span></div>
               <input type="range" id="csl-wh" min="1" max="30" step="1" value="10"
                 oninput="SC.wh=+this.value;document.getElementById('cv-wh').textContent=this.value+'년';fill('csl-wh',(this.value-1)/29);renderCompare()">
             </div>
             <div class="ctrl">
-              <div class="ctrl-label"><span>배우자 양도세 환경</span></div>
+              <div class="ctrl-label"><span id="lbl-wj">배우자</span> 양도세 환경</div>
               <div class="tgrp">
                 <button class="tbtn on" id="cwj-normal" onclick="setSCwj('normal')">일반</button>
                 <button class="tbtn" id="cwj-2tax" onclick="setSCwj('2tax')">2주택</button>
@@ -2221,6 +2221,8 @@ let DEBT=2.27, HCOST=8.20, GEXEMPT=6.00, EXEMPT_LIMIT=12.0;
 // 수증자별 증여재산공제 상수 (단위: 억)
 const RECIP_EXEMPTS = { spouse:6.0, adult:0.5, minor:0.2, grandchild:0.1 };
 const RECIP_LABELS  = { spouse:'배우자', adult:'성인자녀', minor:'미성년자녀', grandchild:'손자(세대생략)' };
+// 수증자 라벨 헬퍼
+function getRL(){ return RECIP_LABELS[S.recip]||'수증자'; }
 
 let S={ap:7.5, reg:'yes', hj:'normal', wh:10, wwr:10, wj:'normal', whouse:'w2',
        donorMulti:'no', // 증여자 다주택 여부 (무상취득세 12% 중과 판정)
@@ -2317,13 +2319,13 @@ function calcG(ap){
   return{gift,tb,rate,tax,ex,skipRate,recip};
 }
 
-// ── Phase 3: 배우자 취득세 ──
+// ── Phase 3: 수증자 취득세 ──
 function calcA(ap,reg){
   // FIX1+2: 음수방어 + 비례세율 수정 (지방세법§11①8)
   const uDebt = Math.min(ap, DEBT);    // 유상분: 최대 감평가까지
   const g     = Math.max(ap-DEBT, 0); // 무상분: 최소 0
 
-  // 수증자(배우자) 취득 후 주택 수 (S.whouse): 'w1'=1주택, 'w2'=2주택, 'w3'=3주택↑
+  // 수증자 취득 후 주택 수 (S.whouse): 'w1'=1주택, 'w2'=2주택, 'w3'=3주택↑
   const whouse = (typeof S.whouse==='string') ? S.whouse : 'w2';
   let uR;
   if(reg==='yes'){
@@ -2353,7 +2355,7 @@ function calcA(ap,reg){
   return{g,uDebt,uR,mR,tU,tM,nts,edu,total};
 }
 
-// ── Phase 4: 배우자 미래 양도세 ──
+// ── Phase 4: 수증자 미래 양도세 ──
 function calcW(ap,wh,wj,fut){
   const gain=fut-ap;
   if(gain<=0)return{tax:0,gain,ltR:0,ltA:0,tb:0,fR:0,lbl:'없음(손실)',ex:false,exempt1h:false,taxRatio:1};
@@ -2465,6 +2467,21 @@ function setRecip(val, btn) {
       wwrNoteEl.innerHTML='';
     }
   }
+  // 수증자 라벨로 UI 텍스트 일괄 업데이트
+  setText('lbl-phase2', recipLabel);
+  setText('lbl-phase3', recipLabel);
+  setText('lbl-phase4', recipLabel);
+  setText('lbl-sc-gift', recipLabel + ' 증여세');
+  setText('lbl-sc-acq',  recipLabel + ' 취득세');
+  setText('lbl-future-title', recipLabel);
+  setText('lbl-wh', recipLabel);
+  setText('lbl-wj', recipLabel);
+  setText('lbl-sum-future', recipLabel + ' 미래 양도세');
+  setText('lbl-sum-net', '💰 ' + recipLabel + ' 순익 (세후)');
+  setText('lbl-sum-sub', '매도가 − ' + recipLabel + ' 취득세 − 양도세');
+  setText('lbl-legend-gift', recipLabel + ' 증여세');
+  setText('lbl-legend-acq', recipLabel + ' 취득세');
+  setText('lbl-legend-future', recipLabel + ' 미래 양도세(참고)');
   render();
 }
 
@@ -2658,8 +2675,8 @@ function renderCompare() {
 
   const rows = [
     ['본인 양도세 (등기 시)', H.tax, 0],
-    ['배우자 증여세 (등기 시)', G.tax, 0],
-    ['배우자 취득세 (등기 시)', acqTot, 0],
+    [(RECIP_LABELS[S.recip]||'수증자')+' 증여세 (등기 시)', G.tax, 0],
+    [(RECIP_LABELS[S.recip]||'수증자')+' 취득세 (등기 시)', acqTot, 0],
     ['미래 양도세 (매도 시)', W2.tax, O.tax],
   ];
 
@@ -2707,14 +2724,14 @@ function renderCompare() {
   const ins = [];
   ins.push('📌 비교 기준: 동일 매도가 ' + ownFut.toFixed(1) + '억원 적용 (취득세·양도세 합산 비교)');
   if (td < 0) {
-    ins.push('✅ 부담부증여 시 배우자 공제·이월과세 해제로 [취득세+양도세] 총액이 절감됩니다.');
+    ins.push('✅ 부담부증여 시 '+(RECIP_LABELS[S.recip]||'수증자')+' 공제·이월과세 해제로 [취득세+양도세] 총액이 절감됩니다.');
   } else {
-    ins.push('⚠ 본인 보유 시 거래세가 더 적은 이유: 증여 후 배우자 보유기간에 따른 장특공이 불충분하거나, 증여 단계의 취득세 부담이 크기 때문입니다.');
+    ins.push('⚠ 본인 보유 시 거래세가 더 적은 이유: 증여 후 '+(RECIP_LABELS[S.recip]||'수증자')+' 보유기간에 따른 장특공이 불충분하거나, 증여 단계의 취득세 부담이 크기 때문입니다.');
   }
   if (cagrGift !== null && cagrOwn !== null) {
     ins.push('💹 CAGR: 부담부증여 ' + (cagrGift >= 0 ? '+' : '') + cagrGift.toFixed(2) + '% vs 본인보유 ' + (cagrOwn >= 0 ? '+' : '') + cagrOwn.toFixed(2) + '%');
   }
-  ins.push('⏰ 이월과세: 2036년 이전 매도 시 부담부증여의 배우자 양도세 불리해질 수 있음');
+  ins.push('⏰ 이월과세: 2036년 이전 매도 시 부담부증여의 '+(RECIP_LABELS[S.recip]||'수증자')+' 양도세 불리해질 수 있음');
   ins.push('💡 [현금흐름 체크] 거래세가 적더라도, 부담부증여는 등기 시점에 취득세 현금이 즉시 필요하며, 본인 보유는 미래 매도 시점에 세금이 발생합니다. 납세 시차를 반드시 고려하세요.');
 
   const insHtml = ins.map(t =>
@@ -2732,7 +2749,7 @@ function renderCompare() {
         </div>
         <div class="htn-row">
           <span class="htn-icon">💰</span>
-          <span><strong>재산세</strong> — 공시가격 기준 연 0.1~0.4%. 부담부증여 후 배우자 보유 시 다주택 합산 과세 여부 확인 필요</span>
+          <span><strong>재산세</strong> — 공시가격 기준 연 0.1~0.4%. 부담부증여 후 수증자 보유 시 다주택 합산 과세 여부 확인 필요</span>
         </div>
         <div class="htn-row">
           <span class="htn-icon">📊</span>
@@ -2912,7 +2929,7 @@ function updateCompareSummary() {
         </div>
         <table class="csm-tbl">
           <tr><td class="csm-td-lbl">감정평가액</td><td class="csm-td-val csm-highlight">${SC.ap.toFixed(1)}억원</td></tr>
-          <tr><td class="csm-td-lbl">배우자 보유</td><td class="csm-td-val">${SC.wh}년</td></tr>
+          <tr><td class="csm-td-lbl" id="lbl-csm-wh">수증자 보유</td><td class="csm-td-val">${SC.wh}년</td></tr>
           <tr><td class="csm-td-lbl">배우자 세환경</td><td class="csm-td-val" style="color:${jColor(SC.wj)}">${jLabel(SC.wj)}</td></tr>
         </table>
       </div>
@@ -2970,7 +2987,7 @@ function render(){
   document.getElementById('note-reg').textContent=reg==='yes'?'지정: 유상 8% · 무상 12%':'해제: 유상 1% · 무상 3.5%';
   // 증여세 카드 부제목 수증자별 업데이트
   const gSubEl = document.getElementById('s-g-sub');
-  if(gSubEl){ const rn=RECIP_LABELS[S.recip]||'배우자'; gSubEl.textContent=rn+' 공제 후'+(S.recip==='grandchild'?' (+할증)':''); }
+  if(gSubEl){ const rn=RECIP_LABELS[S.recip]||'수증자'; gSubEl.textContent=rn+' 공제 후'+(S.recip==='grandchild'?' (+할증)':''); }
   // 수증자 주택 수 note 업데이트
   const whouseEl=document.getElementById('note-whouse');
   if(whouseEl){
@@ -2997,7 +3014,7 @@ function render(){
 
   // 배너
   document.getElementById('banner-total').textContent=fmt(nowTot);
-  document.getElementById('banner-desc').textContent=`본인 양도세 ${fmt(H.tax)} + 배우자 증여세 ${fmt(G.tax)} + 배우자 취득세 ${fmt(acqTot)}`;
+  const RL=RECIP_LABELS[S.recip]||'수증자'; document.getElementById('banner-desc').textContent=`본인 양도세 ${fmt(H.tax)} + ${RL} 증여세 ${fmt(G.tax)} + ${RL} 취득세 ${fmt(acqTot)}`;
 
   // 요약 카드
   const sh=document.getElementById('s-h');
@@ -3037,7 +3054,7 @@ function render(){
     rg+=row('증여세율 (신고공제 3% 차감)',pct(G.rate),'','alt');
     rg+=`<div class="rrow warn"><div class="rl">⚠️ 배우자공제 초과 — 증여세 발생</div><div class="rv orange">${fmt(G.tax)}</div></div>`;
   }
-  rg+=totalRow('배우자 증여세',G.tax>0?fmt(G.tax):'없음');
+  rg+=totalRow((RECIP_LABELS[S.recip]||'수증자')+' 증여세',G.tax>0?fmt(G.tax):'없음');
   document.getElementById('rows-g').innerHTML=rg;
 
   // Phase 3
@@ -3051,7 +3068,7 @@ function render(){
   ra+=row('지방교육세',fmt(A.edu),'red','alt','표준세율 기준(중과 배제)');
   ra+=row('취득세 소계',fmt(A.total),'','');
   ra+=row('등기·감평비용','약 250만원','muted','alt');
-  ra+=totalRow('배우자 취득 시 준비금',fmt(acqTot));
+  ra+=totalRow((RECIP_LABELS[S.recip]||'수증자')+' 취득 시 준비금',fmt(acqTot));
   document.getElementById('rows-a').innerHTML=ra;
 
   // Phase 4 — 이월과세 역산 포함
@@ -3066,7 +3083,7 @@ function render(){
     // 이월과세 적용 구간 — 두 세액 나란히 표시
     rw+=`<div class="rrow" style="background:rgba(239,68,68,.08);border-left:3px solid #ef4444;padding:8px 12px;margin-bottom:4px">
       <span style="font-size:11px;font-weight:700;color:#fca5a5">⚠ 이월과세 적용 구간 (보유 ${wh}년 < 10년)</span><br>
-      <span style="font-size:10px;color:rgba(255,255,255,.5)">증여일로부터 10년 이내 매도 시 배우자 양도세는 <b style="color:#fca5a5">본인 취득가(${HCOST}억) 기준</b>으로 계산됩니다</span>
+      <span style="font-size:10px;color:rgba(255,255,255,.5)">증여일로부터 10년 이내 매도 시 ${RECIP_LABELS[S.recip]||'수증자'} 양도세는 <b style="color:#fca5a5">본인 취득가(${HCOST}억) 기준</b>으로 계산됩니다</span>
     </div>`;
     rw+=row('취득가액 (이월과세 적용)', HCOST.toFixed(2)+'억원','red','','본인 실취득가 기준 강제 적용');
     rw+=row('취득가액 (증여가, 이월과세 해제 후)', ap.toFixed(1)+'억원','muted','alt','참고: 10년 후 매도 시 적용');
@@ -3078,7 +3095,7 @@ function render(){
       rw+=row('과세표준',fmt(W_ewase.tb),'','alt');
       rw+=row('적용세율(지방소득세 포함)',W_ewase.lbl,'','');
     }
-    rw+=totalRow('배우자 양도세 [이월과세 적용]',W_ewase.tax>0?`<span style="color:#fca5a5;font-weight:800">${fmt(W_ewase.tax)}</span>`:'없음');
+    rw+=totalRow((RECIP_LABELS[S.recip]||'수증자')+' 양도세 [이월과세 적용]',W_ewase.tax>0?`<span style="color:#fca5a5;font-weight:800">${fmt(W_ewase.tax)}</span>`:'없음');
     // 이월과세 해제 후 비교
     rw+=`<div class="rrow alt" style="margin-top:6px"><div class="rl" style="color:rgba(255,255,255,.4);font-size:11px">참고: 이월과세 해제 후(10년↑) 양도세</div><div class="rv muted">${W.tax>0?fmt(W.tax):'없음'}</div></div>`;
     rw+=`<div class="rrow" style="background:rgba(239,68,68,.1);padding:6px 12px;border-radius:6px;margin-top:4px">
@@ -3099,7 +3116,7 @@ function render(){
       rw+=row('과세표준',fmt(W.tb),'','');
       rw+=row('적용세율(지방소득세 포함)',W.lbl,'','alt');
     }
-    rw+=totalRow('배우자 미래 양도세 (즉시 현금 불필요)',W.ex?'없음(비과세)':W.tax>0?fmt(W.tax):'없음');
+    rw+=totalRow((RECIP_LABELS[S.recip]||'수증자')+' 미래 양도세 (즉시 현금 불필요)',W.ex?'없음(비과세)':W.tax>0?fmt(W.tax):'없음');
   }
   // 이월과세 적용 시 타임라인/배너도 역산값 반영
   const W_display = isEwase ? W_ewase : W;
@@ -3171,16 +3188,16 @@ function renderChart(reg,hh,hj,wh,wj,fut,curAp,nowTot,acqTot,W){
 
   html+=`<div class="sum-bar">
     <div class="sum-cell"><div class="sum-lbl">등기 시점 즉시</div><div class="sum-val">${fmtS(nowTot)}</div></div>
-    <div class="sum-cell"><div class="sum-lbl">배우자 미래 양도세</div><div class="sum-val" style="color:#16a34a">${W.ex?'비과세':W.tax>0?fmtS(W.tax):'없음'}</div></div>
+    <div class="sum-cell"><div class="sum-lbl" id="lbl-sum-future">수증자 미래 양도세</div><div class="sum-val" style="color:#16a34a">${W.ex?'비과세':W.tax>0?fmtS(W.tax):'없음'}</div></div>
     <div class="sum-cell"><div class="sum-lbl">세금 전체 합산</div><div class="sum-val" style="color:#1d4ed8">${fmtS(grandTot)}</div></div>
     <div class="sum-cell highlight-g">
-      <div class="sum-lbl" style="color:#15803d">💰 배우자 순익 (세후)</div>
+      <div class="sum-lbl" id="lbl-sum-net" style="color:#15803d">💰 수증자 순익 (세후)</div>
       <div class="sum-sub">매도가 ${fmtS(fut)} − 취득가 ${fmtS(curAp)} − 세금</div>
       <div class="sum-val" style="color:${wNetCol}">${wNetLbl}</div>
     </div>
     <div class="sum-cell">
       <div class="sum-lbl">📦 실수령액</div>
-      <div class="sum-sub">매도가 − 배우자 취득세 − 양도세</div>
+      <div class="sum-sub" id="lbl-sum-sub">매도가 − 수증자 취득세 − 양도세</div>
       <div class="sum-val">${fmtS(fut-acqTot-W.tax)}</div>
     </div>
     <div class="sum-cell highlight-b">
@@ -3192,9 +3209,9 @@ function renderChart(reg,hh,hj,wh,wj,fut,curAp,nowTot,acqTot,W){
 
   html+=`<div class="legend">
     <div class="legend-item"><div class="legend-dot" style="background:#dc2626"></div>본인 양도세</div>
-    <div class="legend-item"><div class="legend-dot" style="background:#ea580c"></div>배우자 증여세</div>
-    <div class="legend-item"><div class="legend-dot" style="background:#2563eb"></div>배우자 취득세</div>
-    <div class="legend-item"><div class="legend-dot" style="background:#16a34a"></div>배우자 미래 양도세(참고)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#ea580c"></div><span id="lbl-legend-gift">수증자 증여세</span></div>
+    <div class="legend-item"><div class="legend-dot" style="background:#2563eb"></div><span id="lbl-legend-acq">수증자 취득세</span></div>
+    <div class="legend-item"><div class="legend-dot" style="background:#16a34a"></div><span id="lbl-legend-future">수증자 미래 양도세(참고)</span></div>
   </div>`;
   document.getElementById('chart').innerHTML=html;
 }
@@ -3202,24 +3219,24 @@ function renderChart(reg,hh,hj,wh,wj,fut,curAp,nowTot,acqTot,W){
 function renderInsights(H,G,A,W,ap,reg,acqTot,nowTot,wh,fut){
   const ins=[];
   if(H.tax===0&&G.tax===0)
-    ins.push(`✅ 현재 설정(${ap}억) 최적 — 본인 양도세 없음, 배우자 증여세 없음`);
+    ins.push(`✅ 현재 설정(${ap}억) 최적 — 본인 양도세 없음, ${RECIP_LABELS[S.recip]||'수증자'} 증여세 없음`);
   else if(H.tax>0&&G.tax===0)
     ins.push(`⚠️ 본인 양도세 ${fmt(H.tax)} 발생 — 감평가를 낮춰 채무 비율↓ 시 절감 가능`);
   else if(G.tax>0)
-    ins.push(`⚠️ 배우자 증여세 ${fmt(G.tax)} 발생 (순증여 ${fmt(G.gift)} > 배우자공제 6억)`);
+    ins.push(`⚠️ ${RECIP_LABELS[S.recip]||'수증자'} 증여세 ${fmt(G.tax)} 발생 (순증여 ${fmt(G.gift)} > 공제한도)`);
 
   const rem=GEXEMPT-(ap-DEBT);
   if(rem>0)ins.push(`💡 배우자공제 잔여: ${fmt(rem)} — 향후 10년 내 추가 증여 여력`);
 
   if(reg==='yes'){
     const ar=calcA(ap,'no');
-    ins.push(`📌 규제 해제 시 배우자 취득세 절감: 약 ${fmt(A.total-ar.total)}`);
+    ins.push(`📌 규제 해제 시 ${RECIP_LABELS[S.recip]||'수증자'} 취득세 절감: 약 ${fmt(A.total-ar.total)}`);
   }
-  if(!W.ex&&W.tax>0)ins.push(`📈 배우자 미래 양도세(참고): ${fmt(W.tax)} — 매도 시점 보유기간·규제에 따라 변동`);
+  if(!W.ex&&W.tax>0)ins.push(`📈 ${RECIP_LABELS[S.recip]||'수증자'} 미래 양도세(참고): ${fmt(W.tax)} — 매도 시점 보유기간·규제에 따라 변동`);
   else if(W.ex)ins.push(`✅ 비과세 설정 — 세대 전체 1주택 요건 충족 시 양도세 없음`);
 
   // 이월과세 안내 (동적 — 취득가 기준)
-  ins.push(`⏰ 이월과세: 증여일로부터 10년 이내 매도 시 배우자 양도세는 본인 취득가(${HCOST}억) 기준 적용 — 10년 경과 후 매도 시 이월과세 해제`);
+  ins.push(`⏰ 이월과세: 증여일로부터 10년 이내 매도 시 ${RECIP_LABELS[S.recip]||'수증자'} 양도세는 본인 취득가(${HCOST}억) 기준 적용 — 10년 경과 후 매도 시 이월과세 해제`);
   // 감평가 최적구간 안내 (동적)
   const optLow = Math.round(HCOST*10)/10, optHigh = Math.round((HCOST+0.07)*100)/100;
   if(ap >= HCOST-0.3 && ap <= HCOST+0.3){
@@ -3388,12 +3405,12 @@ async function downloadDocx(btn) {
     // 요약 4열
     const CW4 = Math.floor(CW/4);
     const card4 = (lbl,val,vc) => `<w:tc><w:tcPr><w:tcW w:w="${CW4}" w:type="dxa"/><w:shd w:val="clear" w:color="auto" w:fill="F8FAFC"/><w:tcMar><w:top w:w="100" w:type="dxa"/><w:left w:w="140" w:type="dxa"/><w:bottom w:w="100" w:type="dxa"/><w:right w:w="140" w:type="dxa"/></w:tcMar></w:tcPr><w:p><w:pPr><w:spacing w:before="0" w:after="40"/></w:pPr><w:r>${rpr({sz:16,color:'64748B'})}<w:t>${x(lbl)}</w:t></w:r></w:p><w:p><w:pPr><w:spacing w:before="0" w:after="0"/></w:pPr><w:r>${rpr({sz:26,bold:true,color:vc||'0F1F3D'})}<w:t>${x(val)}</w:t></w:r></w:p></w:tc>`;
-    const SUM4 = `<w:tbl><w:tblPr><w:tblW w:w="${CW}" w:type="dxa"/><w:tblBorders><w:top w:val="single" w:sz="2" w:color="D1DAE8"/><w:bottom w:val="single" w:sz="2" w:color="D1DAE8"/></w:tblBorders></w:tblPr><w:tblGrid><w:gridCol w:w="${CW4}"/><w:gridCol w:w="${CW4}"/><w:gridCol w:w="${CW4}"/><w:gridCol w:w="${CW4}"/></w:tblGrid><w:tr>${card4('본인 양도세',H.tax>0?fmt(H.tax):'없음',H.tax>0?'DC2626':'16A034')}${card4('배우자 증여세',G.tax>0?fmt(G.tax):'없음',G.tax>0?'EA580C':'16A034')}${card4('배우자 취득세',fmt(acqTot),'2563EB')}${card4('등기 시 총합',fmt(nowTot),'0F1F3D')}</w:tr></w:tbl>`;
+    const SUM4 = `<w:tbl><w:tblPr><w:tblW w:w="${CW}" w:type="dxa"/><w:tblBorders><w:top w:val="single" w:sz="2" w:color="D1DAE8"/><w:bottom w:val="single" w:sz="2" w:color="D1DAE8"/></w:tblBorders></w:tblPr><w:tblGrid><w:gridCol w:w="${CW4}"/><w:gridCol w:w="${CW4}"/><w:gridCol w:w="${CW4}"/><w:gridCol w:w="${CW4}"/></w:tblGrid><w:tr>${card4('본인 양도세',H.tax>0?fmt(H.tax):'없음',H.tax>0?'DC2626':'16A034')}${card4((RECIP_LABELS[S.recip]||'수증자')+' 증여세',G.tax>0?fmt(G.tax):'없음',G.tax>0?'EA580C':'16A034')}${card4((RECIP_LABELS[S.recip]||'수증자')+' 취득세',fmt(acqTot),'2563EB')}${card4('등기 시 총합',fmt(nowTot),'0F1F3D')}</w:tr></w:tbl>`;
 
     // CAGR 3열
     const CW3 = Math.floor(CW/3);
     const card3 = (lbl,val,vc) => `<w:tc><w:tcPr><w:tcW w:w="${CW3}" w:type="dxa"/><w:shd w:val="clear" w:color="auto" w:fill="EFF6FF"/><w:tcMar><w:top w:w="100" w:type="dxa"/><w:left w:w="140" w:type="dxa"/><w:bottom w:w="100" w:type="dxa"/><w:right w:w="140" w:type="dxa"/></w:tcMar></w:tcPr><w:p><w:pPr><w:spacing w:before="0" w:after="40"/></w:pPr><w:r>${rpr({sz:16,color:'64748B'})}<w:t>${x(lbl)}</w:t></w:r></w:p><w:p><w:pPr><w:spacing w:before="0" w:after="0"/></w:pPr><w:r>${rpr({sz:26,bold:true,color:vc||'0F1F3D'})}<w:t>${x(val)}</w:t></w:r></w:p></w:tc>`;
-    const CAGR3 = `<w:tbl><w:tblPr><w:tblW w:w="${CW}" w:type="dxa"/><w:tblBorders><w:top w:val="single" w:sz="2" w:color="D1DAE8"/><w:bottom w:val="single" w:sz="2" w:color="D1DAE8"/></w:tblBorders></w:tblPr><w:tblGrid><w:gridCol w:w="${CW3}"/><w:gridCol w:w="${CW3}"/><w:gridCol w:w="${CW3}"/></w:tblGrid><w:tr>${card3('세금 전체 합산',fmt(grandTot),'2563EB')}${card3('배우자 순익 (세후)',W.ex?fmt(fut-ap-acqTot)+' (비과세)':fmt(wNet),wNet>=0?'16A034':'DC2626')}${card3('연복리 수익률 (CAGR)',cagrLbl,cagrRaw!==null&&cagrRaw>=0?'1D4ED8':'DC2626')}</w:tr></w:tbl>`;
+    const CAGR3 = `<w:tbl><w:tblPr><w:tblW w:w="${CW}" w:type="dxa"/><w:tblBorders><w:top w:val="single" w:sz="2" w:color="D1DAE8"/><w:bottom w:val="single" w:sz="2" w:color="D1DAE8"/></w:tblBorders></w:tblPr><w:tblGrid><w:gridCol w:w="${CW3}"/><w:gridCol w:w="${CW3}"/><w:gridCol w:w="${CW3}"/></w:tblGrid><w:tr>${card3('세금 전체 합산',fmt(grandTot),'2563EB')}${card3((RECIP_LABELS[S.recip]||'수증자')+' 순익 (세후)',W.ex?fmt(fut-ap-acqTot)+' (비과세)':fmt(wNet),wNet>=0?'16A034':'DC2626')}${card3('연복리 수익률 (CAGR)',cagrLbl,cagrRaw!==null&&cagrRaw>=0?'1D4ED8':'DC2626')}</w:tr></w:tbl>`;
 
     const regLbl = reg==='yes'?'지정 (유상 8% · 무상 12%)':'해제 (유상 1% · 무상 3.5%)';
     const hhLbl = hh==='o10'?'10년 이상':hh==='3to10'?'3~10년':'3년 미만';
@@ -3401,8 +3418,8 @@ async function downloadDocx(btn) {
     const wjLbl = wj==='exempt'?'비과세':wj==='2tax'?'2주택 중과':'일반';
 
     const ins = [];
-    if(H.tax===0&&G.tax===0) ins.push('✅ 현재 설정('+ap+'억) 최적 — 본인 양도세 없음, 배우자 증여세 없음');
-    else { if(H.tax>0) ins.push('⚠ 본인 양도세 '+fmt(H.tax)+' 발생'); if(G.tax>0) ins.push('⚠ 배우자 증여세 '+fmt(G.tax)+' 발생 (순증여 > 배우자공제 6억)'); }
+    if(H.tax===0&&G.tax===0) ins.push('✅ 현재 설정('+ap+'억) 최적 — 본인 양도세 없음, '+(RECIP_LABELS[S.recip]||'수증자')+' 증여세 없음');
+    else { if(H.tax>0) ins.push('⚠ 본인 양도세 '+fmt(H.tax)+' 발생'); if(G.tax>0) ins.push('⚠ '+(RECIP_LABELS[S.recip]||'수증자')+' 증여세 '+fmt(G.tax)+' 발생 (순증여 > 공제한도)'); }
     const rem = GEXEMPT-(ap-DEBT);
     if(rem>0) ins.push('💡 배우자공제 잔여: '+fmt(rem)+' — 향후 10년 내 추가 증여 여력');
     ins.push('⏰ 이월과세: 증여일로부터 10년 이내 매도 시 본인 취득가('+HCOST+'억) 기준 적용 — 10년 후 해제');
@@ -3424,8 +3441,8 @@ async function downloadDocx(btn) {
         DR('조정대상지역', regLbl),
         DR('본인 보유기간', hhLbl, true),
         DR('본인 양도세 중과', hjLbl),
-        DR('배우자 보유 기간', wh+'년', true),
-        DR('배우자 양도세 환경', wjLbl),
+        DR((RECIP_LABELS[S.recip]||'수증자')+' 보유 기간', wh+'년', true),
+        DR((RECIP_LABELS[S.recip]||'수증자')+' 양도세 환경', wjLbl),
         DR('미래 예상 매도가', fut.toFixed(1)+'억원', true),
       ]),
       SP(120),
@@ -3446,7 +3463,7 @@ async function downloadDocx(btn) {
       ]),
       SP(120),
 
-      SEC('Phase 2 · 배우자 증여세'),
+      SEC('Phase 2 · '+(RECIP_LABELS[S.recip]||'수증자')+' 증여세'),
       TABLE([HR('항목','금액'),
         DR('감평가액', ap.toFixed(1)+'억원'),
         DR('채무 인수액 (공제)', '-'+fmt(DEBT), true, '64748B'),
@@ -3454,11 +3471,11 @@ async function downloadDocx(btn) {
         DR('배우자 증여공제', '-'+fmt(GEXEMPT)+'  [10년 한도]', true, '16A034'),
         DR('과세표준', G.tb>0?fmt(G.tb):'없음', false, G.tb>0?'EA580C':'64748B'),
         DR('증여세율 (신고공제 3% 차감)', G.tb>0?(G.rate*100).toFixed(0)+'%':'—', true),
-        TR('배우자 증여세', G.tax>0?fmt(G.tax):'없음', G.tax>0?'FDBA74':'86EFAC'),
+        TR((RECIP_LABELS[S.recip]||'수증자')+' 증여세', G.tax>0?fmt(G.tax):'없음', G.tax>0?'FDBA74':'86EFAC'),
       ]),
       SP(120),
 
-      SEC('Phase 3 · 배우자 취득세'),
+      SEC('Phase 3 · '+(RECIP_LABELS[S.recip]||'수증자')+' 취득세'),
       TABLE([HR('항목','금액'),
         DR('유상분 과세표준 (채무)', fmt(DEBT)),
         DR('무상분 과세표준 (순증여)', fmt(A.g), true),
@@ -3472,7 +3489,7 @@ async function downloadDocx(btn) {
       ]),
       SP(120),
 
-      SEC('Phase 4 · 배우자 미래 양도세 (참고)'),
+      SEC('Phase 4 · '+(RECIP_LABELS[S.recip]||'수증자')+' 미래 양도세 (참고)'),
       TABLE([HR('항목','금액'),
         DR('취득가액 (이월과세 해제 후)', ap.toFixed(1)+'억  [2036년 이후 기준]'),
         DR('미래 예상 매도가', fut.toFixed(1)+'억원', true),
@@ -3480,7 +3497,7 @@ async function downloadDocx(btn) {
         DR('장기보유특별공제', W.ltA>0?'-'+fmt(W.ltA)+' ['+(W.ltR*100).toFixed(0)+'%]':'없음', true, '16A034'),
         DR('과세표준', W.tb>0?fmt(W.tb):'—'),
         DR('적용세율 (지방소득세 포함)', W.lbl, true),
-        TR('배우자 미래 양도세', W.ex?'없음 (비과세)':W.tax>0?fmt(W.tax):'없음', W.tax>0?'FDBA74':'86EFAC'),
+        TR((RECIP_LABELS[S.recip]||'수증자')+' 미래 양도세', W.ex?'없음 (비과세)':W.tax>0?fmt(W.tax):'없음', W.tax>0?'FDBA74':'86EFAC'),
       ]),
       SP(140),
 
@@ -3489,7 +3506,7 @@ async function downloadDocx(btn) {
       SP(80),
       TABLE([HR('항목','금액'),
         DR('실투자금 (본인 취득가 + 세금 - 전세금)', fmt(initInv)),
-        DR('최종 회수금 (매도가 - 배우자 양도세 - 전세금)', fmt(finalVal), true),
+        DR('최종 회수금 (매도가 - '+(RECIP_LABELS[S.recip]||'수증자')+' 양도세 - 전세금)', fmt(finalVal), true),
         DR('보유 기간', wh+'년'),
         TR('연복리 수익률 (CAGR)', cagrLbl, cagrRaw!==null&&cagrRaw>=0?'D4A843':'DC2626'),
       ]),
@@ -3719,9 +3736,9 @@ function barHover(e, el) {
 
   const rows = [
     ['본인 양도세',        h > 0 ? fmtS(h) : '없음',                   '#fca5a5'],
-    ['배우자 증여세',      g > 0 ? fmtS(g) : '없음',                   '#fdba74'],
-    ['배우자 취득세',      fmtS(a),                                     '#93c5fd'],
-    ['배우자 미래 양도세', wex ? '비과세' : w > 0 ? fmtS(w) : '없음',  '#86efac'],
+    [(RECIP_LABELS[S.recip]||'수증자')+' 증여세',      g > 0 ? fmtS(g) : '없음',                   '#fdba74'],
+    [(RECIP_LABELS[S.recip]||'수증자')+' 취득세',      fmtS(a),                                     '#93c5fd'],
+    [(RECIP_LABELS[S.recip]||'수증자')+' 미래 양도세', wex ? '비과세' : w > 0 ? fmtS(w) : '없음',  '#86efac'],
     null,
     ['등기 즉시 합계',    fmtS(nt), '#ffffff'],
     ['세금 전체 합산',    fmtS(gt), '#f0c866'],
