@@ -422,7 +422,7 @@ input, button, select { font-family: var(--sans); }
 /* ── 전체 레이아웃 ── */
 .layout {
   display: grid;
-  grid-template-columns: 280px 1fr;
+  grid-template-columns: 250px 1fr;
   flex: 1;
   min-height: 0;
   overflow: hidden;
@@ -1518,7 +1518,7 @@ input[type=range]::-webkit-slider-thumb {
   background: #f1f5f9;
 }
 /* ── 반응형 (모바일/태블릿 860px↓) ── */
-@media (max-width: 860px) {
+@media (max-width: 700px) {
   .layout { grid-template-columns: 1fr; overflow-y: auto; }
   .panel-left, .panel-right { height: auto; overflow-y: visible; }
   .fixedbar { flex-wrap: wrap; gap: 8px; }
@@ -1667,7 +1667,7 @@ input[type=range]::-webkit-slider-thumb {
 #sticky-bar .sb-lbl { font-size:11px; color:rgba(255,255,255,.5); }
 #sticky-bar .sb-val { font-size:20px; font-weight:800; color:var(--gold); font-variant-numeric:tabular-nums; }
 #sticky-bar .sb-sub { font-size:10px; color:rgba(255,255,255,.4); }
-@media (max-width: 860px) {
+@media (max-width: 700px) {
   #sticky-bar { display:flex; }
   body { padding-bottom:72px; }  /* sticky bar 높이만큼 여백 */
 }
