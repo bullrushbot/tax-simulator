@@ -7,7 +7,7 @@
 
 <!-- ── SEO 기본 메타태그 ── -->
 <meta name="description" content="2026 최신 세법 반영. 양도세·취득세·증여세를 한 번에 계산하고 직접 양도 vs 부담부증여 세금 차이를 즉시 비교하세요. 장특공·이월과세·CAGR 완벽 반영. 무료 온라인 계산기.">
-<meta name="keywords" content="부동산 양도세 계산기, 부담부증여 계산기, 2026 양도소득세, 취득세 계산기, 증여세 계산기, 1세대1주택 비과세, 장기보유특별공제, 다주택자 중과세, 조정대상지역 양도세, 부동산 세금 시뮬레이터, 양도세 vs 증여세, 절세 방법">
+<meta name="keywords" content="부동산 양도세 계산기, 2026 양도소득세 시뮬레이터, 부담부증여 세금 계산, 다주택자 중과세 계산, 1세대1주택 비과세 계산기, 취득세 계산기, 절세 시뮬레이터, 장기보유특별공제 계산, 조정대상지역 양도세, 부동산 증여세 계산">
 <meta name="author" content="HAN">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://bullrushbot.github.io/tax-simulator/">
@@ -15,7 +15,7 @@
 <!-- ── Open Graph (카카오·SNS 공유 미리보기) ── -->
 <meta property="og:type" content="website">
 <meta property="og:title" content="부동산 세금 시뮬레이터 — 양도 vs 부담부증여 무료 계산기">
-<meta property="og:description" content="직접 양도할까, 부담부증여할까? 양도세·취득세·증여세 자동 계산 및 수익률(CAGR) 비교. 2026 최신 세법 반영. 완전 무료.">
+<meta property="og:description" content="2026 양도세·취득세 자동 계산. 직접 양도 vs 부담부증여 세금 즉시 비교. 다주택 중과·장특공·비과세 완벽 반영. 무료.">
 <meta property="og:url" content="https://bullrushbot.github.io/tax-simulator/">
 <meta property="og:image" content="https://bullrushbot.github.io/tax-simulator/cover.png">
 <meta property="og:image:width" content="800">
@@ -27,7 +27,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="부동산 세금 시뮬레이터 — 양도 vs 부담부증여">
 <meta name="twitter:image" content="https://bullrushbot.github.io/tax-simulator/cover.png">
-<meta name="twitter:description" content="직접 양도 vs 부담부증여 세금 즉시 비교. 양도세·취득세·증여세 자동계산. 장특공·이월과세·CAGR 반영. 무료.">
+<meta name="twitter:description" content="2026 양도세·취득세 자동 계산. 직접 양도 vs 부담부증여 세금 즉시 비교. 무료 시뮬레이터.">
 
 <!-- ── 구조화 데이터 (Google 리치 스니펫) ── -->
 <script type="application/ld+json">
@@ -1479,8 +1479,7 @@ input[type=range]::-webkit-slider-thumb {
   color: var(--text);
 }
 .tab-dl-btn:hover { background: var(--bg); }
-.tab-dl-btn.docx { color: #2563eb; border-color: rgba(37,99,235,.3); }
-.tab-dl-btn.docx:hover { background: rgba(37,99,235,.07); }
+
 .tab-dl-btn.pdf  { color: #dc2626; border-color: rgba(220,38,38,.3); }
 .tab-dl-btn.pdf:hover  { background: rgba(220,38,38,.07); }
 
@@ -1986,10 +1985,6 @@ input[type=range]::-webkit-slider-thumb {
       </button>
       <!-- 다운로드 버튼 그룹 -->
       <div class="tab-dl-group">
-        <button class="tab-dl-btn docx" onclick="downloadDocx(this)" title="Word 문서 다운로드">
-          <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v12m0 0l-4-4m4 4l4-4M4 20h16"/></svg>
-          DOCX
-        </button>
         <button class="tab-dl-btn pdf" onclick="downloadPdf(this)" title="PDF 다운로드">
           <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
           PDF
@@ -2774,15 +2769,19 @@ function renderCompare() {
   const wLtPct   = W2.ltR > 0 ? Math.round(W2.ltR*100)+'%' : '미적용';
   const wLtYrs   = isEwaseCmp ? ewaseTotalH : wh; // 이월과세 시 T0+T1 표시
 
-  const rows = [
+  const divider = `<tr><td colspan="4" style="padding:0;height:1px;background:rgba(212,168,67,.2);line-height:0"> </td></tr>`;
+  const sHdr = (txt) => `<tr><td colspan="4" style="padding:6px 12px 5px;font-size:11px;font-weight:700;letter-spacing:.8px;color:#d4a843;background:rgba(212,168,67,.08);border-left:3px solid rgba(212,168,67,.7)">${txt}</td></tr>`;
+
+  const regRows = [
     ['본인 양도세 (등기 시)', H.tax, 0],
     [(RECIP_LABELS[S.recip]||'수증자')+' 증여세 (등기 시)', G.tax, 0],
     [(RECIP_LABELS[S.recip]||'수증자')+' 취득세 (등기 시)', acqTot, 0],
-    ['미래 양도세 (매도 시)', W2.tax, O.tax],
   ];
+  const futRows = [['미래 양도세 (매도 시)', W2.tax, O.tax]];
 
   let html = '';
-  rows.forEach(([lbl, gv, ov], i) => {
+  html += sHdr('🏛 등기 시 · 즉시 납부');
+  regRows.forEach(([lbl, gv, ov], i) => {
     const d = gv - ov;
     const dCls = d < -500/10000 ? 'better' : d > 500/10000 ? 'worse' : 'neutral';
     const sign = d > 0 ? '+' : '';
@@ -2791,11 +2790,22 @@ function renderCompare() {
       <td class="${gv > 0 ? 'worse' : 'better'}">${gv > 0 ? fmt(gv) : '없음'}</td>
       <td class="${dCls}">${d !== 0 ? sign + fmt(d) : '동일'}</td></tr>`;
   });
+  html += divider;
+  html += sHdr('📅 매도 시 · 미래 납부');
+  futRows.forEach(([lbl, gv, ov]) => {
+    const d = gv - ov;
+    const dCls = d < -500/10000 ? 'better' : d > 500/10000 ? 'worse' : 'neutral';
+    const sign = d > 0 ? '+' : '';
+    html += `<tr><td>${lbl}</td>
+      <td class="${ov > 0 ? 'worse' : 'better'}">${ov > 0 ? fmt(ov) : '없음'}</td>
+      <td class="${gv > 0 ? 'worse' : 'better'}">${gv > 0 ? fmt(gv) : '없음'}</td>
+      <td class="${dCls}">${d !== 0 ? sign + fmt(d) : '동일'}</td></tr>`;
+  });
 
-  // 합산
   const td = giftGrand2 - ownGrand;
   const tdCls = td < 0 ? 'better' : td > 0 ? 'worse' : 'neutral';
-  // 장특공 행 (세금이 아닌 정보 행이므로 별도 스타일)
+
+  html += divider;
   html += `<tr class="alt" style="font-size:11px;color:var(--muted)">
     <td>장기보유특별공제</td>
     <td style="color:${O.ltR>0?'#86efac':'var(--muted2)'}">
@@ -2808,9 +2818,31 @@ function renderCompare() {
     <td><strong>${fmt(ownGrand)}</strong></td><td><strong>${fmt(giftGrand2)}</strong></td>
     <td class="${tdCls}"><strong>${(td > 0 ? '+' : '') + fmt(td)}</strong></td></tr>`;
 
-  // CAGR 행
+  html += divider;
+  html += sHdr('💰 실질 수익 분석');
+
+  var ownRecv = ownFut - O.tax - DEBT;
+  var giftRecv = ownFut - W2.tax - DEBT;
+  var recvDiff = giftRecv - ownRecv;
+  var recvDiffCls = recvDiff > 0.05 ? 'better' : recvDiff < -0.05 ? 'worse' : 'neutral';
+  html += `<tr class="alt"><td>매도 후 순수 회수금<br><span style="font-size:10px;color:var(--muted2)">매도가 - 미래양도세 - 전세 상환</span></td>
+    <td class="green">${fmt(ownRecv)}</td>
+    <td class="green">${fmt(giftRecv)}</td>
+    <td class="${recvDiffCls}">${(recvDiff>=0?'+':'') + fmt(recvDiff)}</td></tr>`;
+
+  var ownProfit = ownRecv - initInvOwn;
+  var giftProfit = giftRecv - initInvGift;
+  var profitDiff = giftProfit - ownProfit;
+  var profitDiffCls = profitDiff > 0.05 ? 'better' : profitDiff < -0.05 ? 'worse' : 'neutral';
+  html += `<tr><td>순 투자 수익<br><span style="font-size:10px;color:var(--muted2)">회수금 - 실투자금 (취득가 - 전세)</span></td>
+    <td class="${ownProfit>=0?'green':'red'}">${fmt(ownProfit)}</td>
+    <td class="${giftProfit>=0?'green':'red'}">${fmt(giftProfit)}</td>
+    <td class="${profitDiffCls}">${(profitDiff>=0?'+':'') + fmt(profitDiff)}</td></tr>`;
+
+  html += divider;
+  html += sHdr('📊 수익률');
   const [cgCls, cgGift, cgOwn, cgDiff] = ce(cagrGift, cagrOwn, '%');
-  html += `<tr class="alt"><td>💹 연복리 수익률 (CAGR)</td>
+  html += `<tr class="alt"><td>연복리 수익률 (CAGR)</td>
     <td class="${cgCls === 'better' ? 'worse' : cgCls === 'worse' ? 'better' : 'neutral'}">${cgOwn}</td><td class="${cgCls}">${cgGift}</td>
     <td class="neutral">${cgDiff}</td></tr>`;
 
@@ -2894,20 +2926,15 @@ function setExemptLimit(v) { /* 2021.12.7 이전 케이스 미지원 - 12억 고
 function applyFixed() {
   const v = id => { const el=document.getElementById(id); return el ? parseFloat(el.value) : NaN; };
   const d_val = v('inp-debt'), h_val = v('inp-hcost');
-
   DEBT  = (!isNaN(d_val) && d_val >= 0) ? d_val : 2.27;
   HCOST = (!isNaN(h_val) && h_val >= 0) ? h_val : 8.20;
-
-  var hEl2 = document.getElementById('inp-hcost');
-  var dEl2 = document.getElementById('inp-debt');
-  var hCard2 = hEl2 && hEl2.closest('.fb-card');
-  var dCard2 = dEl2 && dEl2.closest('.fb-card');
-  if(hCard2) hCard2.classList.toggle('needs-input', !hEl2.value);
-  if(dCard2) dCard2.classList.toggle('needs-input', !dEl2.value);
-  var hH = document.getElementById('hint-hcost');
-  var dH = document.getElementById('hint-debt');
-  if(hH) hH.textContent = hEl2 && hEl2.value ? '✎ 입력됨' : '⚠ 필수 입력';
-  if(dH) dH.textContent = dEl2 && dEl2.value ? '✎ 입력됨' : '⚠ 필수 입력';
+  var hEl2=document.getElementById('inp-hcost'), dEl2=document.getElementById('inp-debt');
+  var hC2=hEl2&&hEl2.closest('.fb-card'), dC2=dEl2&&dEl2.closest('.fb-card');
+  if(hC2) hC2.classList.toggle('needs-input', !hEl2.value);
+  if(dC2) dC2.classList.toggle('needs-input', !dEl2.value);
+  var hH=document.getElementById('hint-hcost'), dH=document.getElementById('hint-debt');
+  if(hH) hH.textContent=hEl2&&hEl2.value?'✎ 입력됨':'⚠ 필수 입력';
+  if(dH) dH.textContent=dEl2&&dEl2.value?'✎ 입력됨':'⚠ 필수 입력';
 
   // EXEMPT_LIMIT은 setExemptLimit() 버튼으로 별도 관리
   const card=document.querySelector('.fb-card-apply');
@@ -3247,9 +3274,9 @@ function render(){
     </div>`;
   } else {
     // 이월과세 해제 구간 — 기존 표시
-    rw+=`<div class="rrow" style="background:rgba(22,163,74,.08);border-left:3px solid #22c55e;padding:6px 12px;margin-bottom:4px">
-      <span style="font-size:11px;font-weight:700;color:#86efac">✅ 이월과세 해제 (보유 ${wh}년 ≥ 10년)</span><br>
-      <span style="font-size:10px;color:rgba(255,255,255,.5)">배우자 취득가(${ap.toFixed(1)}억) 기준으로 양도세 계산</span>
+    rw+=`<div class="rrow" style="background:rgba(22,163,74,.18);border-left:4px solid #22c55e;padding:8px 14px;margin-bottom:6px;border-radius:0 6px 6px 0">
+      <span style="font-size:12px;font-weight:800;color:#4ade80">✅ 이월과세 해제 (보유 ${wh}년 ≥ 10년)</span><br>
+      <span style="font-size:11px;color:rgba(255,255,255,.75)">수증자 취득가(${ap.toFixed(1)}억) 기준으로 양도세 계산</span>
     </div>`;
     rw+=row('취득가액 (이월과세 해제 후)',ap.toFixed(1)+'억원','','','증여가액 기준');
     rw+=row('미래 예상 매도가',fut.toFixed(1)+'억원','','alt');
@@ -3498,217 +3525,6 @@ function makeDocx(files) {
   let pos = 0;
   for (const p of parts) { result.set(p, pos); pos += p.length; }
   return result;
-}
-
-async function downloadDocx(btn) {
-  if(typeof gtag==='function') gtag('event','download_docx',{'event_category':'Engagement','event_label':'Word Download'});
-  btn = btn || document.querySelector('.tab-dl-btn.docx');
-  const origHTML = btn.innerHTML;
-  btn.textContent = '생성 중...'; btn.disabled = true;
-
-  try {
-    const { ap, reg, hh, hj, wh, wj, fut } = S;
-    const H = calcH(ap, hh, hj);
-    const G = calcG(ap);
-    const A = calcA(ap, reg);
-    const W = calcW(ap, wh, wj, fut);
-    const acqTot = A.total + 0.025;
-    const nowTot = H.tax + G.tax + acqTot;
-    const grandTot = nowTot + W.tax;
-    const initInv = HCOST + nowTot - DEBT;
-    const finalVal = fut - W.tax - DEBT;
-    const cagrRaw = initInv > 0 && finalVal > 0
-      ? (Math.pow(finalVal / initInv, 1 / wh) - 1) * 100 : null;
-    const cagrLbl = cagrRaw === null ? '—' : (cagrRaw >= 0 ? '+' : '') + cagrRaw.toFixed(2) + '%/년';
-    const wNet = fut - ap - acqTot - W.tax;
-    const now = new Date();
-    const dateStr = now.getFullYear() + String(now.getMonth()+1).padStart(2,'0') + String(now.getDate()).padStart(2,'0');
-
-    // ── OOXML 헬퍼 ──
-    const x = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-
-    const rpr = (opts={}) => {
-      const sz = opts.sz || 20;
-      const colorTag = opts.color ? '<w:color w:val="' + opts.color + '"/>' : '';
-      return '<w:rPr><w:rFonts w:ascii="Malgun Gothic" w:hAnsi="Malgun Gothic" w:cs="Malgun Gothic"/><w:sz w:val="' + sz + '"/><w:szCs w:val="' + sz + '"/>' + (opts.bold ? '<w:b/>' : '') + colorTag + (opts.italic ? '<w:i/>' : '') + '</w:rPr>';
-    };
-
-    const P = (text, opts={}) => {
-      const align = opts.align ? `<w:jc w:val="${opts.align}"/>` : '';
-      const bdr = opts.borderBot ? `<w:pBdr><w:bottom w:val="single" w:sz="12" w:space="1" w:color="${opts.borderBot}"/></w:pBdr>` : '';
-      const before = opts.before !== undefined ? opts.before : 80;
-      const after  = opts.after  !== undefined ? opts.after  : 80;
-      return `<w:p><w:pPr><w:spacing w:before="${before}" w:after="${after}"/>${align}${bdr}</w:pPr><w:r>${rpr(opts)}<w:t xml:space="preserve">${x(text)}</w:t></w:r></w:p>`;
-    };
-
-    const SP = (n=80) => `<w:p><w:pPr><w:spacing w:before="${n}" w:after="${n}"/></w:pPr></w:p>`;
-    const SEC = t => P(t, {sz:22, bold:true, color:'0F1F3D', borderBot:'D4A843', before:200, after:100});
-
-    const cell = (text, w, opts={}) => {
-      const bg = opts.bg || 'FFFFFF';
-      const align = opts.align === 'right' ? '<w:jc w:val="right"/>' : '';
-      return `<w:tc><w:tcPr><w:tcW w:w="${w}" w:type="dxa"/><w:shd w:val="clear" w:color="auto" w:fill="${bg}"/><w:tcMar><w:top w:w="80" w:type="dxa"/><w:left w:w="140" w:type="dxa"/><w:bottom w:w="80" w:type="dxa"/><w:right w:w="140" w:type="dxa"/></w:tcMar></w:tcPr><w:p><w:pPr><w:spacing w:before="0" w:after="0"/>${align}</w:pPr><w:r>${rpr(opts)}<w:t xml:space="preserve">${x(String(text||''))}</w:t></w:r></w:p></w:tc>`;
-    };
-
-    const CW = 9006;
-    const C1 = 5200, C2 = CW - C1;
-
-    const DR = (lbl, val, alt, vc) => `<w:tr>${cell(lbl,C1,{bg:alt?'F0F4F8':'FFFFFF'})}${cell(val,C2,{bg:alt?'F0F4F8':'FFFFFF',align:'right',bold:true,color:vc||'1E293B'})}</w:tr>`;
-    const HR = (t1,t2) => `<w:tr>${cell(t1,C1,{bg:'0F1F3D',bold:true,color:'FFFFFF',sz:18})}${cell(t2,C2,{bg:'0F1F3D',bold:true,color:'FFFFFF',sz:18,align:'right'})}</w:tr>`;
-    const TR = (lbl,val,vc) => `<w:tr>${cell(lbl,C1,{bg:'1A3260',bold:true,color:'FFFFFF',sz:20})}${cell(val,C2,{bg:'1A3260',bold:true,color:vc||'D4A843',sz:20,align:'right'})}</w:tr>`;
-    const TABLE = rows => `<w:tbl><w:tblPr><w:tblW w:w="${CW}" w:type="dxa"/><w:tblBorders><w:top w:val="single" w:sz="2" w:color="D1DAE8"/><w:bottom w:val="single" w:sz="2" w:color="D1DAE8"/><w:insideH w:val="single" w:sz="2" w:color="E2E8F0"/></w:tblBorders></w:tblPr><w:tblGrid><w:gridCol w:w="${C1}"/><w:gridCol w:w="${C2}"/></w:tblGrid>${rows}</w:tbl>`;
-
-    // 요약 4열
-    const CW4 = Math.floor(CW/4);
-    const card4 = (lbl,val,vc) => `<w:tc><w:tcPr><w:tcW w:w="${CW4}" w:type="dxa"/><w:shd w:val="clear" w:color="auto" w:fill="F8FAFC"/><w:tcMar><w:top w:w="100" w:type="dxa"/><w:left w:w="140" w:type="dxa"/><w:bottom w:w="100" w:type="dxa"/><w:right w:w="140" w:type="dxa"/></w:tcMar></w:tcPr><w:p><w:pPr><w:spacing w:before="0" w:after="40"/></w:pPr><w:r>${rpr({sz:16,color:'64748B'})}<w:t>${x(lbl)}</w:t></w:r></w:p><w:p><w:pPr><w:spacing w:before="0" w:after="0"/></w:pPr><w:r>${rpr({sz:26,bold:true,color:vc||'0F1F3D'})}<w:t>${x(val)}</w:t></w:r></w:p></w:tc>`;
-    const SUM4 = `<w:tbl><w:tblPr><w:tblW w:w="${CW}" w:type="dxa"/><w:tblBorders><w:top w:val="single" w:sz="2" w:color="D1DAE8"/><w:bottom w:val="single" w:sz="2" w:color="D1DAE8"/></w:tblBorders></w:tblPr><w:tblGrid><w:gridCol w:w="${CW4}"/><w:gridCol w:w="${CW4}"/><w:gridCol w:w="${CW4}"/><w:gridCol w:w="${CW4}"/></w:tblGrid><w:tr>${card4('본인 양도세',H.tax>0?fmt(H.tax):'없음',H.tax>0?'DC2626':'16A034')}${card4((RECIP_LABELS[S.recip]||'수증자')+' 증여세',G.tax>0?fmt(G.tax):'없음',G.tax>0?'EA580C':'16A034')}${card4((RECIP_LABELS[S.recip]||'수증자')+' 취득세',fmt(acqTot),'2563EB')}${card4('등기 시 총합',fmt(nowTot),'0F1F3D')}</w:tr></w:tbl>`;
-
-    // CAGR 3열
-    const CW3 = Math.floor(CW/3);
-    const card3 = (lbl,val,vc) => `<w:tc><w:tcPr><w:tcW w:w="${CW3}" w:type="dxa"/><w:shd w:val="clear" w:color="auto" w:fill="EFF6FF"/><w:tcMar><w:top w:w="100" w:type="dxa"/><w:left w:w="140" w:type="dxa"/><w:bottom w:w="100" w:type="dxa"/><w:right w:w="140" w:type="dxa"/></w:tcMar></w:tcPr><w:p><w:pPr><w:spacing w:before="0" w:after="40"/></w:pPr><w:r>${rpr({sz:16,color:'64748B'})}<w:t>${x(lbl)}</w:t></w:r></w:p><w:p><w:pPr><w:spacing w:before="0" w:after="0"/></w:pPr><w:r>${rpr({sz:26,bold:true,color:vc||'0F1F3D'})}<w:t>${x(val)}</w:t></w:r></w:p></w:tc>`;
-    const CAGR3 = `<w:tbl><w:tblPr><w:tblW w:w="${CW}" w:type="dxa"/><w:tblBorders><w:top w:val="single" w:sz="2" w:color="D1DAE8"/><w:bottom w:val="single" w:sz="2" w:color="D1DAE8"/></w:tblBorders></w:tblPr><w:tblGrid><w:gridCol w:w="${CW3}"/><w:gridCol w:w="${CW3}"/><w:gridCol w:w="${CW3}"/></w:tblGrid><w:tr>${card3('세금 전체 합산',fmt(grandTot),'2563EB')}${card3((RECIP_LABELS[S.recip]||'수증자')+' 순익 (세후)',W.ex?fmt(fut-ap-acqTot)+' (비과세)':fmt(wNet),wNet>=0?'16A034':'DC2626')}${card3('연복리 수익률 (CAGR)',cagrLbl,cagrRaw!==null&&cagrRaw>=0?'1D4ED8':'DC2626')}</w:tr></w:tbl>`;
-
-    const regLbl = reg==='yes'?'지정 (유상 8% · 무상 12%)':'해제 (유상 1% · 무상 3.5%)';
-    const hhLbl = hh==='o10'?'10년 이상':hh==='3to10'?'3~10년':'3년 미만';
-    const hjLbl = hj==='normal'?'일반':hj==='2tax'?'2주택(+20%)':'3주택(+30%)';
-    const wjLbl = wj==='exempt'?'비과세':wj==='2tax'?'2주택 중과':'일반';
-
-    const ins = [];
-    if(H.tax===0&&G.tax===0) ins.push('✅ 현재 설정('+ap+'억) 최적 — 본인 양도세 없음, '+(RECIP_LABELS[S.recip]||'수증자')+' 증여세 없음');
-    else { if(H.tax>0) ins.push('⚠ 본인 양도세 '+fmt(H.tax)+' 발생'); if(G.tax>0) ins.push('⚠ '+(RECIP_LABELS[S.recip]||'수증자')+' 증여세 '+fmt(G.tax)+' 발생 (순증여 > 공제한도)'); }
-    const rem = GEXEMPT-(ap-DEBT);
-    if(rem>0) ins.push('💡 배우자공제 잔여: '+fmt(rem)+' — 향후 10년 내 추가 증여 여력');
-    ins.push('⏰ 이월과세: 증여일로부터 10년 이내 매도 시 본인 취득가('+HCOST+'억) 기준 적용 — 10년 후 해제');
-    ins.push('📈 감평가를 취득가 수준('+HCOST+'억)으로 설정하면 증여세·양도세 0 + 배우자 취득가 최대화 효과');
-    ins.push('⚠️ 토지거래허가구역 내 부담부증여는 제한될 수 있으니 사전 확인 필수');
-
-    const dtFmt = dateStr.slice(0,4)+'.'+dateStr.slice(4,6)+'.'+dateStr.slice(6,8);
-
-    const body = [
-      P('부담부증여 절세 시나리오 시뮬레이션 결과', {sz:32,bold:true,color:'0F1F3D',before:0,after:60}),
-      P('출력일: '+dtFmt+'  |  감평가: '+ap.toFixed(1)+'억  |  미래 예상 매도가: '+fut.toFixed(1)+'억', {sz:18,color:'64748B',before:0,after:160,borderBot:'D4A843'}),
-
-      SEC('📌 기본 설정'),
-      TABLE([HR('항목','설정값'),
-        DR('채무 (전세보증금)','2억 2,700만원'),
-        DR('본인 실취득가','8억 2,000만원',true),
-        DR('배우자 증여공제','6억원 (10년 한도)'),
-        DR('감정평가 가액', ap.toFixed(1)+'억원', true),
-        DR('조정대상지역', regLbl),
-        DR('본인 보유기간', hhLbl, true),
-        DR('본인 양도세 중과', hjLbl),
-        DR((RECIP_LABELS[S.recip]||'수증자')+' 보유 기간', wh+'년', true),
-        DR((RECIP_LABELS[S.recip]||'수증자')+' 양도세 환경', wjLbl),
-        DR('미래 예상 매도가', fut.toFixed(1)+'억원', true),
-      ]),
-      SP(120),
-
-      SEC('🔐 등기 시점 즉시 현금 — 세금 요약'),
-      SUM4,
-      SP(120),
-
-      SEC('Phase 1 · 본인 양도세'),
-      TABLE([HR('항목','금액'),
-        DR('유상 양도가액 (채무 인수)', fmt(H.sp)+'  [= 전세보증금]'),
-        DR('환산 취득가액', fmt(H.ac)+'  [실취득가×채무비율 '+(H.cr*100).toFixed(1)+'%]', true),
-        DR('양도차익', H.gain>0?fmt(H.gain):'없음 (손실)', false, H.gain>0?'DC2626':'64748B'),
-        DR('장기보유특별공제', H.ltA>0?'-'+fmt(H.ltA)+' ['+(H.ltR*100).toFixed(0)+'%]':'없음', true, '16A034'),
-        DR('과세표준', H.tb>0?fmt(H.tb):'—'),
-        DR('적용세율 (지방소득세 포함)', H.lbl, true),
-        TR('본인 양도세', H.tax>0?fmt(H.tax):'없음 (손실)', H.tax>0?'FCA5A5':'86EFAC'),
-      ]),
-      SP(120),
-
-      SEC('Phase 2 · '+(RECIP_LABELS[S.recip]||'수증자')+' 증여세'),
-      TABLE([HR('항목','금액'),
-        DR('감평가액', ap.toFixed(1)+'억원'),
-        DR('채무 인수액 (공제)', '-'+fmt(DEBT), true, '64748B'),
-        DR('순증여액', fmt(G.gift), false, G.gift>6?'EA580C':'1E293B'),
-        DR('배우자 증여공제', '-'+fmt(GEXEMPT)+'  [10년 한도]', true, '16A034'),
-        DR('과세표준', G.tb>0?fmt(G.tb):'없음', false, G.tb>0?'EA580C':'64748B'),
-        DR('증여세율 (신고공제 3% 차감)', G.tb>0?(G.rate*100).toFixed(0)+'%':'—', true),
-        TR((RECIP_LABELS[S.recip]||'수증자')+' 증여세', G.tax>0?fmt(G.tax):'없음', G.tax>0?'FDBA74':'86EFAC'),
-      ]),
-      SP(120),
-
-      SEC('Phase 3 · '+(RECIP_LABELS[S.recip]||'수증자')+' 취득세'),
-      TABLE([HR('항목','금액'),
-        DR('유상분 과세표준 (채무)', fmt(DEBT)),
-        DR('무상분 과세표준 (순증여)', fmt(A.g), true),
-        DR('유상분 취득세 ['+(A.uR*100).toFixed(0)+'%]', fmt(A.tU), false, 'DC2626'),
-        DR('무상분 취득세 ['+(A.mR*100).toFixed(0)+'%]', fmt(A.tM), true, 'DC2626'),
-        DR('농어촌특별세', fmt(A.nts), false, 'DC2626'),
-        DR('지방교육세 [표준세율 · 중과 배제]', fmt(A.edu), true, 'DC2626'),
-        DR('취득세 소계', fmt(A.total)),
-        DR('등기·감평비용', '약 250만원', true, '64748B'),
-        TR('배우자 취득 시 준비금', fmt(acqTot)),
-      ]),
-      SP(120),
-
-      SEC('Phase 4 · '+(RECIP_LABELS[S.recip]||'수증자')+' 미래 양도세 (참고)'),
-      TABLE([HR('항목','금액'),
-        DR('취득가액 (이월과세 해제 후)', ap.toFixed(1)+'억  [2036년 이후 기준]'),
-        DR('미래 예상 매도가', fut.toFixed(1)+'억원', true),
-        DR('양도차익', W.gain>0?fmt(W.gain):'없음', false, W.gain>0?'1E293B':'64748B'),
-        DR('장기보유특별공제', W.ltA>0?'-'+fmt(W.ltA)+' ['+(W.ltR*100).toFixed(0)+'%]':'없음', true, '16A034'),
-        DR('과세표준', W.tb>0?fmt(W.tb):'—'),
-        DR('적용세율 (지방소득세 포함)', W.lbl, true),
-        TR((RECIP_LABELS[S.recip]||'수증자')+' 미래 양도세', W.ex?'없음 (비과세)':W.tax>0?fmt(W.tax):'없음', W.tax>0?'FDBA74':'86EFAC'),
-      ]),
-      SP(140),
-
-      SEC('📊 종합 수익성 분석'),
-      CAGR3,
-      SP(80),
-      TABLE([HR('항목','금액'),
-        DR('실투자금 (본인 취득가 + 세금 - 전세금)', fmt(initInv)),
-        DR('최종 회수금 (매도가 - '+(RECIP_LABELS[S.recip]||'수증자')+' 양도세 - 전세금)', fmt(finalVal), true),
-        DR('보유 기간', wh+'년'),
-        TR('연복리 수익률 (CAGR)', cagrLbl, cagrRaw!==null&&cagrRaw>=0?'D4A843':'DC2626'),
-      ]),
-      SP(140),
-
-      SEC('💡 전략 인사이트'),
-      ...ins.map(t => P(t, {sz:19, before:60, after:60})),
-      SP(80),
-      P('※ 본 문서는 시뮬레이션 결과이며 실제 세금은 담당 세무사 확인이 필요합니다.', {sz:16, color:'94A3B8', italic:true, before:100, after:0}),
-    ].join('');
-
-    const docXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
-<w:body>${body}<w:sectPr><w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="1000" w:right="1000" w:bottom="1000" w:left="1000" w:header="708" w:footer="708" w:gutter="0"/></w:sectPr></w:body></w:document>`;
-
-    const settingsXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:settings xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:compat><w:compatSetting w:name="compatibilityMode" w:uri="http://schemas.microsoft.com/office/word" w:val="15"/></w:compat></w:settings>`;
-    const stylesXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:styles xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" w:docDefaults=""><w:docDefaults><w:rPrDefault><w:rPr><w:rFonts w:ascii="Malgun Gothic" w:hAnsi="Malgun Gothic" w:cs="Malgun Gothic"/><w:sz w:val="20"/><w:szCs w:val="20"/><w:lang w:val="ko-KR"/></w:rPr></w:rPrDefault></w:docDefaults></w:styles>`;
-    const files = {
-      '[Content_Types].xml': `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/><Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/><Override PartName="/word/settings.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.settings+xml"/></Types>`,
-      '_rels/.rels': `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/></Relationships>`,
-      'word/document.xml': docXml,
-      'word/styles.xml': stylesXml,
-      'word/settings.xml': settingsXml,
-      'word/_rels/document.xml.rels': `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/settings" Target="settings.xml"/></Relationships>`,
-    };
-
-    const zipBytes = makeDocx(files);
-    // base64 data URL 방식 (sandbox iframe에서 createObjectURL 차단 우회)
-    let b64 = '';
-    const chunk = 8192;
-    for (let i = 0; i < zipBytes.length; i += chunk) {
-      b64 += String.fromCharCode(...zipBytes.subarray(i, i + chunk));
-    }
-    const dataUrl = 'data:application/vnd.openxmlformats-officedocument.wordprocessingml.document;base64,' + btoa(b64);
-    const a = document.createElement('a');
-    a.href = dataUrl;
-    a.download = '부담부증여_절세시나리오_' + dateStr + '.docx';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-
-  } catch(e) {
-    alert('오류: ' + e.message); console.error(e);
-  } finally {
-    btn.innerHTML = origHTML; btn.disabled = false;
-  }
 }
 
 function downloadPdf(btn) {
@@ -4005,20 +3821,16 @@ function movePopup(e) {
 <script>
 (function(){
   function chk(){
-    var hEl=document.getElementById('inp-hcost');
-    var dEl=document.getElementById('inp-debt');
-    var hC=hEl&&hEl.closest('.fb-card');
-    var dC=dEl&&dEl.closest('.fb-card');
+    var hEl=document.getElementById('inp-hcost'), dEl=document.getElementById('inp-debt');
+    var hC=hEl&&hEl.closest('.fb-card'), dC=dEl&&dEl.closest('.fb-card');
     if(hC) hC.classList.toggle('needs-input',!hEl.value);
     if(dC) dC.classList.toggle('needs-input',!dEl.value);
-    var hH=document.getElementById('hint-hcost');
-    var dH=document.getElementById('hint-debt');
+    var hH=document.getElementById('hint-hcost'), dH=document.getElementById('hint-debt');
     if(hH) hH.textContent=hEl&&hEl.value?'✎ 입력됨':'⚠ 필수 입력';
     if(dH) dH.textContent=dEl&&dEl.value?'✎ 입력됨':'⚠ 필수 입력';
   }
   ['inp-hcost','inp-debt'].forEach(function(id){
-    var el=document.getElementById(id);
-    if(el) el.addEventListener('input',chk);
+    var el=document.getElementById(id); if(el) el.addEventListener('input',chk);
   });
   chk();
 })();
