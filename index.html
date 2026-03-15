@@ -3,27 +3,31 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>부동산 절세 시나리오 분석기 — 직접 양도 vs 부담부증여</title>
+<title>부동산 세금 시뮬레이터 — 양도 vs 부담부증여 | 무료 절세 계산기</title>
 
 <!-- ── SEO 기본 메타태그 ── -->
-<meta name="description" content="2026 부동산 양도세·취득세 자동 계산기. 직접 양도 vs 부담부증여 세금 비교, 수익률(CAGR) 예측까지. 조정대상지역·다주택자 중과세 완벽 반영. 무료 시뮬레이터.">
-<meta name="keywords" content="부동산 양도세 계산기, 2026 양도소득세 시뮬레이터, 부담부증여 세금 계산, 다주택자 중과세 계산, 1세대1주택 비과세 계산기, 취득세 계산기, 절세 시뮬레이터, 장기보유특별공제 계산, 조정대상지역 양도세, 부동산 증여세 계산">
+<meta name="description" content="2026 최신 세법 반영. 양도세·취득세·증여세를 한 번에 계산하고 직접 양도 vs 부담부증여 세금 차이를 즉시 비교하세요. 장특공·이월과세·CAGR 완벽 반영. 무료 온라인 계산기.">
+<meta name="keywords" content="부동산 양도세 계산기, 부담부증여 계산기, 2026 양도소득세, 취득세 계산기, 증여세 계산기, 1세대1주택 비과세, 장기보유특별공제, 다주택자 중과세, 조정대상지역 양도세, 부동산 세금 시뮬레이터, 양도세 vs 증여세, 절세 방법">
 <meta name="author" content="HAN">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://bullrushbot.github.io/tax-simulator/">
 
 <!-- ── Open Graph (카카오·SNS 공유 미리보기) ── -->
 <meta property="og:type" content="website">
-<meta property="og:title" content="부동산 절세 시나리오 분석기 — 직접 양도 vs 부담부증여">
-<meta property="og:description" content="2026 양도세·취득세 자동 계산. 직접 양도 vs 부담부증여 세금 즉시 비교. 다주택 중과·장특공·비과세 완벽 반영. 무료.">
+<meta property="og:title" content="부동산 세금 시뮬레이터 — 양도 vs 부담부증여 무료 계산기">
+<meta property="og:description" content="직접 양도할까, 부담부증여할까? 양도세·취득세·증여세 자동 계산 및 수익률(CAGR) 비교. 2026 최신 세법 반영. 완전 무료.">
 <meta property="og:url" content="https://bullrushbot.github.io/tax-simulator/">
+<meta property="og:image" content="https://bullrushbot.github.io/tax-simulator/cover.png">
+<meta property="og:image:width" content="800">
+<meta property="og:image:height" content="800">
 <meta property="og:locale" content="ko_KR">
-<meta property="og:site_name" content="부동산 절세 시나리오 분석기">
+<meta property="og:site_name" content="부동산 세금 시뮬레이터">
 
 <!-- ── Twitter Card ── -->
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="부동산 절세 시나리오 분석기 — 직접 양도 vs 부담부증여">
-<meta name="twitter:description" content="2026 양도세·취득세 자동 계산. 직접 양도 vs 부담부증여 세금 즉시 비교. 무료 시뮬레이터.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="부동산 세금 시뮬레이터 — 양도 vs 부담부증여">
+<meta name="twitter:image" content="https://bullrushbot.github.io/tax-simulator/cover.png">
+<meta name="twitter:description" content="직접 양도 vs 부담부증여 세금 즉시 비교. 양도세·취득세·증여세 자동계산. 장특공·이월과세·CAGR 반영. 무료.">
 
 <!-- ── 구조화 데이터 (Google 리치 스니펫) ── -->
 <script type="application/ld+json">
@@ -42,6 +46,15 @@
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&family=DM+Mono:wght@400;500&family=Pretendard:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<!-- Google Analytics 4 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-TQEMFC1T5Y"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-TQEMFC1T5Y');
+  gtag('config', 'GT-55KXZ277');
+</script>
 <style>
 
 /* ════════════════════════════════════════
@@ -1146,9 +1159,21 @@ input[type=range]::-webkit-slider-thumb {
   border-radius: 8px;
   padding: 6px 10px;
   cursor: default;
-  transition: background .15s;
+  transition: background .15s, border-color .3s, box-shadow .3s;
 }
 .fb-card:hover { background: rgba(255,255,255,.10); }
+.fb-card.needs-input {
+  border-color: rgba(212,168,67,.85) !important;
+  background: rgba(212,168,67,.07) !important;
+  animation: fbpulse 2.2s ease-in-out infinite;
+}
+@keyframes fbpulse {
+  0%,100% { box-shadow: 0 0 0 2px rgba(212,168,67,.15); }
+  50%      { box-shadow: 0 0 0 5px rgba(212,168,67,.3); }
+}
+.fb-card.needs-input .fb-card-lbl { color: #fcd34d !important; }
+.fb-card.needs-input .fb-input::placeholder { color: rgba(212,168,67,.55) !important; }
+.fb-card.needs-input .fb-card-note { color: rgba(212,168,67,.65) !important; }
 .fb-card-apply {
   flex: 0 0 auto;
   width: 70px;
@@ -1692,8 +1717,8 @@ input[type=range]::-webkit-slider-thumb {
   <div class="header-main">
     <div>
       <div class="header-label">Tax Optimization Simulator</div>
-      <h1>부동산 절세 시나리오 분석기</h1>
-      <div class="header-sub">직접 양도 vs 부담부증여 · 취득/양도세 비교 및 수익률(CAGR) 예측</div>
+      <h1>부동산 세금 시뮬레이터</h1>
+      <div class="header-sub">직접 양도 vs 부담부증여 세금·수익률 비교</div>
     </div>
     <div class="header-right">
       <div class="header-badge">v3 — 지방소득세 10% · 증여세 신고공제 3% · CAGR 실투자금 기준</div>
@@ -1710,19 +1735,19 @@ input[type=range]::-webkit-slider-thumb {
     <div class="fb-label">📌 기준값</div>
     <div class="fb-scroll">
       <div class="fb-card">
-        <div class="fb-card-lbl">취득자 실취득가 <span class="fb-edit-hint">✎ 입력</span></div>
+        <div class="fb-card-lbl">취득자 실취득가 <span class="fb-edit-hint" id="hint-hcost">⚠ 필수 입력</span></div>
         <div class="fb-card-row">
           <input class="fb-input" id="inp-hcost" type="number" step="0.01" placeholder="8.20" min="0" max="50"
-                 onblur="applyFixed()" onkeydown="if(event.key==='Enter'){this.blur();}">
+                 onblur="applyFixed()" onkeydown="if(event.key==='Enter'){this.blur();">
           <span class="fb-unit">억</span>
         </div>
         <div class="fb-card-note">본인 보유 양도세 기준가</div>
       </div>
       <div class="fb-card">
-        <div class="fb-card-lbl">전세보증금 (채무) <span class="fb-edit-hint">✎ 입력</span></div>
+        <div class="fb-card-lbl">전세보증금 (채무) <span class="fb-edit-hint" id="hint-debt">⚠ 필수 입력</span></div>
         <div class="fb-card-row">
           <input class="fb-input" id="inp-debt" type="number" step="0.01" placeholder="2.27" min="0" max="20"
-                 onblur="applyFixed()" onkeydown="if(event.key==='Enter'){this.blur();}">
+                 onblur="applyFixed()" onkeydown="if(event.key==='Enter'){this.blur();">
           <span class="fb-unit">억</span>
         </div>
         <div class="fb-card-note">부담부증여 시 인수 채무</div>
@@ -2870,9 +2895,19 @@ function applyFixed() {
   const v = id => { const el=document.getElementById(id); return el ? parseFloat(el.value) : NaN; };
   const d_val = v('inp-debt'), h_val = v('inp-hcost');
 
-  // 빈칸이거나 숫자가 아니면 placeholder 기본값으로 롤백
   DEBT  = (!isNaN(d_val) && d_val >= 0) ? d_val : 2.27;
   HCOST = (!isNaN(h_val) && h_val >= 0) ? h_val : 8.20;
+
+  var hEl2 = document.getElementById('inp-hcost');
+  var dEl2 = document.getElementById('inp-debt');
+  var hCard2 = hEl2 && hEl2.closest('.fb-card');
+  var dCard2 = dEl2 && dEl2.closest('.fb-card');
+  if(hCard2) hCard2.classList.toggle('needs-input', !hEl2.value);
+  if(dCard2) dCard2.classList.toggle('needs-input', !dEl2.value);
+  var hH = document.getElementById('hint-hcost');
+  var dH = document.getElementById('hint-debt');
+  if(hH) hH.textContent = hEl2 && hEl2.value ? '✎ 입력됨' : '⚠ 필수 입력';
+  if(dH) dH.textContent = dEl2 && dEl2.value ? '✎ 입력됨' : '⚠ 필수 입력';
 
   // EXEMPT_LIMIT은 setExemptLimit() 버튼으로 별도 관리
   const card=document.querySelector('.fb-card-apply');
@@ -3466,6 +3501,7 @@ function makeDocx(files) {
 }
 
 async function downloadDocx(btn) {
+  if(typeof gtag==='function') gtag('event','download_docx',{'event_category':'Engagement','event_label':'Word Download'});
   btn = btn || document.querySelector('.tab-dl-btn.docx');
   const origHTML = btn.innerHTML;
   btn.textContent = '생성 중...'; btn.disabled = true;
@@ -3676,6 +3712,7 @@ async function downloadDocx(btn) {
 }
 
 function downloadPdf(btn) {
+  if(typeof gtag==='function') gtag('event','download_pdf',{'event_category':'Engagement','event_label':'PDF Download'});
   const panels = ['panel-gift','panel-own','panel-compare'];
   let activePanel = null;
   for(const id of panels){
@@ -3963,6 +4000,27 @@ function movePopup(e) {
     if(y<8)y=8;
     bx.style.left=x+'px';bx.style.top=y+'px';
   }
+})();
+</script>
+<script>
+(function(){
+  function chk(){
+    var hEl=document.getElementById('inp-hcost');
+    var dEl=document.getElementById('inp-debt');
+    var hC=hEl&&hEl.closest('.fb-card');
+    var dC=dEl&&dEl.closest('.fb-card');
+    if(hC) hC.classList.toggle('needs-input',!hEl.value);
+    if(dC) dC.classList.toggle('needs-input',!dEl.value);
+    var hH=document.getElementById('hint-hcost');
+    var dH=document.getElementById('hint-debt');
+    if(hH) hH.textContent=hEl&&hEl.value?'✎ 입력됨':'⚠ 필수 입력';
+    if(dH) dH.textContent=dEl&&dEl.value?'✎ 입력됨':'⚠ 필수 입력';
+  }
+  ['inp-hcost','inp-debt'].forEach(function(id){
+    var el=document.getElementById(id);
+    if(el) el.addEventListener('input',chk);
+  });
+  chk();
 })();
 </script>
 </body>
