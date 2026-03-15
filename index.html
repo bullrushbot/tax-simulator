@@ -1831,10 +1831,23 @@ input[type=range]::-webkit-slider-thumb {
 
       <div class="sec-title">📋 본인 양도세</div>
       <div class="ctrl">
-        <div class="ctrl-label"><span>보유 기간 (장특공)</span><span class="ctrl-val" id="v-h-own">10년</span></div>
+        <div class="ctrl-label">
+          <span>현재까지 보유기간 (T0)</span><span class="ctrl-val" id="v-past-h">5년</span>
+        </div>
+        <input type="range" id="sl-past-h" min="1" max="30" step="1" value="5"
+          oninput="S.pastH=+this.value;document.getElementById('v-past-h').textContent=this.value+'년';document.getElementById('v-total-h').textContent=(S.pastH+S.ownH)+'년';render()">
+        <div class="note">취득일 ~ 현재 · 지금까지 실제 보유한 기간</div>
+      </div>
+      <div class="ctrl">
+        <div class="ctrl-label">
+          <span>추가 보유기간 (T1)</span><span class="ctrl-val" id="v-h-own">10년</span>
+        </div>
         <input type="range" id="sl-h-own" min="1" max="30" step="1" value="10"
-          oninput="S.ownH=+this.value;document.getElementById('v-h-own').textContent=this.value+'년';render()">
-        <div class="note">총 보유기간 기준 · 장특공 10년↑ 20%, 15년↑ 30% · 다주택 중과 시 0% 강제 배제</div>
+          oninput="S.ownH=+this.value;S.wh=S.ownH;document.getElementById('v-h-own').textContent=this.value+'년';document.getElementById('v-total-h').textContent=(S.pastH+S.ownH)+'년';const _sw=document.getElementById('sl-wh');if(_sw){_sw.value=S.ownH;fill('sl-wh',(S.ownH-1)/29);}setText('v-wh',S.ownH+'년');render()">
+        <div class="note">현재 ~ 미래 매도까지 · 부담부증여 수증자 보유기간과 동일 비교 기준</div>
+      </div>
+      <div class="note" style="background:rgba(212,168,67,.08);border-left:3px solid var(--gold);padding:6px 10px;border-radius:0 6px 6px 0;margin-bottom:4px;">
+        총 보유기간 (T0+T1): <b id="v-total-h" style="color:var(--gold-l)">15년</b> — 본인 직접 매도 시 장특공 기준
       </div>
       <div class="ctrl">
         <div class="ctrl-label"><span>중과 여부<span class="tip-wrap"><span class="tip-icon">?</span><span class="tip-box">인별 판단 — 본인(증여자) 명의 주택 수 기준.<br>배우자·세대원 주택은 무관.<br>중과 적용 시 장기보유특별공제 0% 강제 배제(§95).</span></span></span></div>
@@ -1848,7 +1861,10 @@ input[type=range]::-webkit-slider-thumb {
       <div class="sec-title">📈 <span id="lbl-future-title">수증자</span> 미래 양도세 (참고용)</div>
       <div class="ctrl">
         <div class="ctrl-label"><span>보유 기간</span><span class="ctrl-val" id="v-wh">—</span></div>
-        <input type="range" id="sl-wh" min="1" max="30" step="1" value="10">
+        <input type="range" id="sl-wh" min="1" max="30" step="1" value="10" style="display:none">
+        <div class="note" style="background:rgba(99,179,237,.08);border-left:3px solid #63b3ed;padding:5px 10px;border-radius:0 6px 6px 0;margin-bottom:2px;">
+          📎 추가 보유기간(T1)과 자동 동기화 — 위 슬라이더로 함께 조정됩니다
+        </div>
         <div class="note" id="note-wh-ewase">10년 미만: <span style="color:#fca5a5;font-weight:700">이월과세 적용</span> (본인 취득가 기준 역산) · 10년↑: 이월과세 해제</div>
       </div>
       <div class="ctrl" id="ctrl-wwr" style="display:none">
@@ -1877,10 +1893,19 @@ input[type=range]::-webkit-slider-thumb {
     <div id="ctrl-own" style="display:none">
       <div class="sec-title" style="margin-top:14px">⚙️ 본인 보유 설정</div>
       <div class="ctrl">
-        <div class="ctrl-label"><span>보유 기간</span><span class="ctrl-val" id="v-own-h">—</span></div>
+        <div class="ctrl-label"><span>현재까지 보유기간 (T0)</span><span class="ctrl-val" id="v-own-past-h">—</span></div>
+        <input type="range" id="sl-own-past-h" min="1" max="30" step="1" value="5"
+          oninput="S.pastH=+this.value;document.getElementById('v-own-past-h').textContent=this.value+'년';document.getElementById('v-own-total-h').textContent=(S.pastH+S.ownH)+'년';renderOwn()">
+        <div class="note">취득일 ~ 현재 · 실제 보유기간</div>
+      </div>
+      <div class="ctrl">
+        <div class="ctrl-label"><span>추가 보유기간 (T1)</span><span class="ctrl-val" id="v-own-h">—</span></div>
         <input type="range" id="sl-own-h" min="1" max="30" step="1" value="10"
-          oninput="S.ownH=+this.value;renderOwn()">
-        <div class="note">총 보유기간 기준 · 장특공 10년↑ 20%, 15년↑ 30%</div>
+          oninput="S.ownH=+this.value;S.wh=S.ownH;document.getElementById('v-own-h').textContent=this.value+'년';document.getElementById('v-own-total-h').textContent=(S.pastH+S.ownH)+'년';const _sw2=document.getElementById('sl-wh');if(_sw2){_sw2.value=S.ownH;fill('sl-wh',(S.ownH-1)/29);}setText('v-wh',S.ownH+'년');renderOwn()">
+        <div class="note">현재 ~ 매도까지 추가 보유기간</div>
+      </div>
+      <div class="note" style="background:rgba(212,168,67,.08);border-left:3px solid var(--gold);padding:6px 10px;border-radius:0 6px 6px 0;margin-bottom:4px;">
+        총 보유기간 (T0+T1): <b id="v-own-total-h" style="color:var(--gold-l)">15년</b> — 장특공 기준
       </div>
       <div class="ctrl" id="ctrl-owr" style="display:none">
         <div class="ctrl-label"><span>실거주 기간 (1주택 비과세 장특공)</span><span class="ctrl-val" id="v-owr">10년</span></div>
@@ -2081,6 +2106,11 @@ input[type=range]::-webkit-slider-thumb {
           <div class="sc-lbl">세후 실수령액</div>
           <div class="sc-val green" id="own-net">—</div>
         </div>
+        <div class="sum-card c-gold">
+          <div class="sc-lbl">💹 연복리 수익률 (CAGR)</div>
+          <div class="sc-val gold" id="own-cagr">—</div>
+          <div style="font-size:10px;color:var(--muted);margin-top:3px" id="own-cagr-sub">실투자금 기준</div>
+        </div>
       </div>
       <!-- 상세 내역 -->
       <div class="rsec">
@@ -2224,10 +2254,11 @@ function getRL(){ return RECIP_LABELS[S.recip]||'수증자'; }
 let S={ap:7.5, reg:'yes', hj:'normal', wh:10, wwr:10, wj:'normal', whouse:'w2',
        donorMulti:'no', // 증여자 다주택 여부 (무상취득세 12% 중과 판정)
        recip:'spouse',  // 수증자: spouse/adult/minor/grandchild
-       gexempt:6.0, fut:12, ownH:10, owr:10, ownJ:'normal', ownFut:12};
+       gexempt:6.0, fut:12, pastH:5, ownH:10, owr:10, ownJ:'normal', ownFut:12};
+// pastH = T0(현재까지 보유기간), ownH = T1(앞으로 추가 보유기간)
 
 // ── 비교탭 독립 설정 ──
-let SC={ownH:10,owr:10,ownJ:'normal',ownFut:12,ap:7.5,wh:10,wwr:10,wj:'normal',whouse:'w2',recip:'spouse'};
+let SC={pastH:5,ownH:10,owr:10,ownJ:'normal',ownFut:12,ap:7.5,wh:10,wwr:10,wj:'normal',whouse:'w2',recip:'spouse'};
 let _scSynced=false; // 비교탭 첫 진입 시 한 번 동기화
 
 // ── 포맷 ──
@@ -2541,10 +2572,13 @@ function calcOwn(hcost, ownH, ownJ, ownFut) {
 // ── 본인보유 패널 렌더 ──
 function renderOwn() {
   const { ownH, ownJ, ownFut } = S;
-  const O = calcOwn(HCOST, ownH, ownJ, ownFut);
+  const totalH = (S.pastH || 0) + ownH; // T0+T1 = 총 보유기간
+  const O = calcOwn(HCOST, totalH, ownJ, ownFut);
 
   // 슬라이더 표시
-  fill('sl-own-h', (ownH - 1) / 29);
+  const elOwnH=document.getElementById('sl-own-h'); if(elOwnH){elOwnH.value=ownH;fill('sl-own-h',(ownH-1)/29);}
+  setText('v-own-h', ownH + '년');
+  setText('v-own-total-h', (S.pastH||5) + ownH + '년');
   fill('sl-own-fut', (ownFut - 6) / 24);
   setText('v-own-h', ownH + '년');
   setText('v-own-fut', ownFut.toFixed(1) + '억');
@@ -2617,10 +2651,40 @@ function renderOwn() {
   } else {
     ownIns.push(`💰 양도세 ${fmt(O.tax)} — 세후 실수령 ${fmt(ownFut - O.tax)}억`);
     if(ownJ !== 'normal') ownIns.push('⚠️ 다주택 중과 적용 중 — 1주택 전환 후 매도 시 대폭 절감 가능');
-    else if(SC.ownH >= 10) ownIns.push('📌 장기보유 20% 공제 적용됨 (10년↑)');
+    else if((SC.pastH||5)+SC.ownH >= 10) ownIns.push('📌 총 보유 '+((SC.pastH||5)+SC.ownH)+'년 → 장기보유특별공제 적용됨');
   }
   ownIns.push(`📋 취득가 ${fmt(HCOST)}억 → 매도 ${fmt(ownFut)}억, 차익 ${fmt(ownFut - HCOST)}억 (세전)`);
   ownIns.push('⏰ 부담부증여와 비교 시 취득세·증여 비용 없이 매도 가능하나 양도세 전액 본인 부담');
+
+  // CAGR 계산 (T1 기준: 지금부터 매도까지 실투자금 기준)
+  const initInvOwn = HCOST - DEBT;
+  const finalValOwn = ownFut - O.tax - DEBT;
+  // 💡 취득 시점(T0)부터 매도까지 총기간(T0+T1)으로 CAGR 계산해야 정확
+  const cagrOwn = initInvOwn > 0 && finalValOwn > 0 && totalH > 0
+    ? (Math.pow(finalValOwn / initInvOwn, 1 / totalH) - 1) * 100 : null;
+  const cagrEl = document.getElementById('own-cagr');
+  const cagrSubEl = document.getElementById('own-cagr-sub');
+  if(cagrEl){
+    if(cagrOwn !== null){
+      cagrEl.textContent = (cagrOwn >= 0 ? '+' : '') + cagrOwn.toFixed(2) + '%';
+      cagrEl.style.color = cagrOwn >= 0 ? '#d4a843' : '#dc2626';
+    } else {
+      cagrEl.textContent = '—';
+    }
+  }
+  if(cagrSubEl){
+    cagrSubEl.textContent = '실투자 ' + fmt(initInvOwn) + '억 · 총 ' + totalH + '년 기준 (T0+T1)';
+  }
+
+  // 장특공 인사이트 강화
+  if(O.ltR > 0){
+    ownIns.push('📊 장기보유특별공제 ' + pct(O.ltR) + ' 적용 (총 보유 ' + totalH + '년 기준)');
+  } else if(totalH >= 3) {
+    ownIns.push('📊 장기보유특별공제: 보유 ' + totalH + '년 → ' + pct(Math.min(totalH*0.02, 0.30)));
+  }
+  if(cagrOwn !== null){
+    ownIns.push('💹 연복리 수익률 (CAGR) ' + (cagrOwn>=0?'+':'') + cagrOwn.toFixed(2) + '% — 총 ' + totalH + '년 (T0+T1) 실투자금 기준');
+  }
 
   const insEl = document.getElementById('own-insights');
   if(insEl) insEl.innerHTML = ownIns.map(m=>`<div class="insight-row">${m}</div>`).join('');
@@ -2632,34 +2696,42 @@ function renderCompare() {
   const { ownH, ownJ, ownFut, ap, wh, wj } = SC;
   const fut = SC.ownFut; // 비교탭: 동일 매도가 기준
   const { reg, hh, hj } = S; // 취득세환경·본인양도세는 gift탭 설정 그대로
-  const H = calcH(ap, hh, hj), G = calcG(ap), A = calcA(ap, reg), W = calcW(ap, wh, wj, fut);
+
+  // 💡 이월과세 조건: T1(수증자 보유) < 10년이면 T0+T1 합산 보유기간으로 장특공 계산
+  const isEwaseCmp = wh < 10;
+  const ewaseTotalH = (SC.pastH || 5) + wh; // T0+T1
+
+  const H = calcH(ap, hh, hj, SC.pastH), G = calcG(ap), A = calcA(ap, reg);
+  const W = isEwaseCmp ? calcW(HCOST, ewaseTotalH, wj, fut) : calcW(ap, wh, wj, fut);
   const acqTot = A.total + 0.025;
   const giftTotal = H.tax + G.tax + acqTot;          // 등기 시 즉시 세금
-  const giftFuture = W.tax;                           // 배우자 미래 양도세
+  const giftFuture = W.tax;                           // 수증자 미래 양도세
   const giftGrand = giftTotal + giftFuture;           // 전체 합산
 
   // 매도가를 동일하게 비교 (ownFut 사용)
-  const O = calcOwn(HCOST, ownH, ownJ, ownFut);
+  const totalOwnH = (SC.pastH || 0) + ownH; // T0+T1
+  const O = calcOwn(HCOST, totalOwnH, ownJ, ownFut);
   const ownGrand = O.tax;                             // 본인 양도세만
 
-  // 동일 매도가로 gift 미래 양도세 재계산
-  const W2 = calcW(ap, wh, wj, ownFut);
+  // 💡 동일 매도가로 수증자 미래 양도세 재계산 (이월과세 시 T0+T1 합산)
+  const W2 = isEwaseCmp ? calcW(HCOST, ewaseTotalH, wj, ownFut) : calcW(ap, wh, wj, ownFut);
   const giftGrand2 = giftTotal + W2.tax;
 
   const diff = giftGrand2 - ownGrand;
   const diffAbs = Math.abs(diff);
 
   // CAGR 비교 (gift)
+  // 💡 CAGR 분모: 취득 시점부터 매도까지 총기간(T0+T1) 사용
   const initInvGift = HCOST + giftTotal - DEBT;
   const finalValGift = ownFut - W2.tax - DEBT;
-  const cagrGift = initInvGift > 0 && finalValGift > 0
-    ? (Math.pow(finalValGift / initInvGift, 1 / wh) - 1) * 100 : null;
+  const cagrGift = initInvGift > 0 && finalValGift > 0 && ewaseTotalH > 0
+    ? (Math.pow(finalValGift / initInvGift, 1 / ewaseTotalH) - 1) * 100 : null;
 
-  // CAGR 비교 (own) - 전세 끼고 있으므로 net 실투자 = HCOST - DEBT
+  // CAGR 비교 (own) - 실투자 = HCOST - DEBT, 총기간 = T0+T1
   const initInvOwn = HCOST - DEBT;
   const finalValOwn = ownFut - O.tax - DEBT;
-  const cagrOwn = initInvOwn > 0 && finalValOwn > 0
-    ? (Math.pow(finalValOwn / initInvOwn, 1 / ownH) - 1) * 100 : null;
+  const cagrOwn = initInvOwn > 0 && finalValOwn > 0 && totalOwnH > 0
+    ? (Math.pow(finalValOwn / initInvOwn, 1 / totalOwnH) - 1) * 100 : null; // T0+T1 기준
 
   const ce = (gift, own, unit) => {
     if (gift === null || own === null) return ['neutral','—','—','—'];
@@ -2670,6 +2742,12 @@ function renderCompare() {
       unit === '%' ? (own >= 0 ? '+' : '') + own.toFixed(2) + '%' : fmt(own),
       sign + (unit === '%' ? d.toFixed(2) + '%' : fmt(d))];
   };
+
+  // 장특공 정보 계산
+  const ownLtPct = O.ltR > 0 ? Math.round(O.ltR*100)+'%' : '미적용';
+  const ownLtYrs = totalOwnH;
+  const wLtPct   = W2.ltR > 0 ? Math.round(W2.ltR*100)+'%' : '미적용';
+  const wLtYrs   = isEwaseCmp ? ewaseTotalH : wh; // 이월과세 시 T0+T1 표시
 
   const rows = [
     ['본인 양도세 (등기 시)', H.tax, 0],
@@ -2692,6 +2770,15 @@ function renderCompare() {
   // 합산
   const td = giftGrand2 - ownGrand;
   const tdCls = td < 0 ? 'better' : td > 0 ? 'worse' : 'neutral';
+  // 장특공 행 (세금이 아닌 정보 행이므로 별도 스타일)
+  html += `<tr class="alt" style="font-size:11px;color:var(--muted)">
+    <td>장기보유특별공제</td>
+    <td style="color:${O.ltR>0?'#86efac':'var(--muted2)'}">
+      ${ownLtPct}${O.ltR>0?' ('+ownLtYrs+'년)':''}</td>
+    <td style="color:${W2.ltR>0?'#86efac':'var(--muted2)'}">
+      ${wLtPct}${W2.ltR>0?' ('+wLtYrs+'년)':''}</td>
+    <td style="color:var(--muted2)">참고</td></tr>`;
+
   html += `<tr class="ctot"><td><strong>세금 전체 합산</strong></td>
     <td><strong>${fmt(ownGrand)}</strong></td><td><strong>${fmt(giftGrand2)}</strong></td>
     <td class="${tdCls}"><strong>${(td > 0 ? '+' : '') + fmt(td)}</strong></td></tr>`;
@@ -2718,11 +2805,10 @@ function renderCompare() {
     vEl.innerHTML = ownLabel + ' 시나리오의 취득/양도세가 <strong>' + fmt(diffAbs) + '</strong> 더 적습니다.';
   }
 
-  // verdict-note 동적 업데이트
   const _noteEl = document.getElementById('verdict-note');
   if(_noteEl){
     const _yrs = SC.ownH || S.ownH || 10;
-    _noteEl.innerHTML = '※ 취득·양도세 기준. <strong>본인 보유 시 '+_yrs+'년</strong> 동안의 재산세·종부세 누적액을 더하면 유불리가 달라질 수 있습니다.';
+    _noteEl.innerHTML = '※ 취득·양도세 기준. 앞으로 <strong>'+_yrs+'년</strong> 보유 시 재산세·종부세 누적액을 더하면 유불리가 달라질 수 있습니다.';
   }
 
   // 인사이트
@@ -2738,8 +2824,6 @@ function renderCompare() {
   }
   ins.push('⏰ 이월과세: 2036년 이전 매도 시 부담부증여의 '+(RECIP_LABELS[S.recip]||'수증자')+' 양도세 불리해질 수 있음');
   ins.push('💡 [현금흐름 체크] 거래세가 적더라도, 부담부증여는 등기 시점에 취득세 현금이 즉시 필요하며, 본인 보유는 미래 매도 시점에 세금이 발생합니다. 납세 시차를 반드시 고려하세요.');
-  const _ownYrs = SC.ownH || S.ownH || 10;
-  ins.push('🏛 [보유세] 위 CAGR은 취득·양도세만 반영한 수치입니다. 본인 보유 ' + _ownYrs + '년간 재산세·종부세가 누적되면 실질 수익률은 이보다 낮아집니다.');
 
   const insHtml = ins.map(t =>
     `<div class="ins-row">${t}</div>`
@@ -2886,13 +2970,14 @@ function toggleCompareAdj() {
   }
 }
 function syncToCompare(force) {
+  SC.pastH  = S.pastH || 5; // T0 동기화
   SC.ownH   = S.ownH;
   SC.ownJ   = S.ownJ;
   SC.ownFut = S.ownFut;
   SC.ap     = S.ap;
   SC.wh     = S.wh;
   SC.wj     = S.wj;
-  SC.fut    = S.ownFut; // 비교는 동일 매도가 기준
+  SC.fut    = S.ownFut;
   _scSynced = true;
   updateCompareSummary();
 }
@@ -2924,7 +3009,9 @@ function updateCompareSummary() {
           <span class="csm-card-title">본인 보유 후 직접 매도</span>
         </div>
         <table class="csm-tbl">
-          <tr><td class="csm-td-lbl">보유기간</td><td class="csm-td-val">${SC.ownH}년</td></tr>
+          <tr><td class="csm-td-lbl">현재까지 (T0)</td><td class="csm-td-val">${SC.pastH||5}년</td></tr>
+          <tr><td class="csm-td-lbl">추가 보유 (T1)</td><td class="csm-td-val">${SC.ownH}년</td></tr>
+          <tr><td class="csm-td-lbl">총 보유기간</td><td class="csm-td-val csm-highlight">${(SC.pastH||5)+SC.ownH}년</td></tr>
           <tr><td class="csm-td-lbl">주택구분</td><td class="csm-td-val" style="color:${jColor(SC.ownJ)}">${jLabel(SC.ownJ)}</td></tr>
           <tr><td class="csm-td-lbl">비교 매도가</td><td class="csm-td-val csm-highlight">${SC.ownFut.toFixed(1)}억원</td></tr>
         </table>
@@ -2983,9 +3070,21 @@ function render(){
   fill('sl-wh',(wh-1)/29);
   fill('sl-fut',(fut-6)/24);
   // FIX3: 부담부증여 탭 본인 보유기간 슬라이더 동기화
+  // 슬라이더 동기화 (T0)
+  const elPastH=document.getElementById('sl-past-h'); if(elPastH){elPastH.value=S.pastH||5;fill('sl-past-h',((S.pastH||5)-1)/29);}
+  const elOwnPastH=document.getElementById('sl-own-past-h'); if(elOwnPastH){elOwnPastH.value=S.pastH||5;fill('sl-own-past-h',((S.pastH||5)-1)/29);}
+  setText('v-past-h',(S.pastH||5)+'년');
+  setText('v-own-past-h',(S.pastH||5)+'년');
+  // 슬라이더 동기화 (T1)
   fill('sl-h-own',(S.ownH-1)/29);
   const elHOwn=document.getElementById('sl-h-own'); if(elHOwn) elHOwn.value=S.ownH;
   setText('v-h-own',S.ownH+'년');
+  S.wh = S.ownH; // T1 = 수증자 보유기간 동기화
+  const _sw3=document.getElementById('sl-wh');if(_sw3){_sw3.value=S.ownH;fill('sl-wh',(S.ownH-1)/29);}
+  setText('v-wh',S.ownH+'년');
+  // 총 보유기간 표시
+  setText('v-total-h',(S.pastH||5)+S.ownH+'년');
+  setText('v-own-total-h',(S.pastH||5)+S.ownH+'년');
   document.querySelectorAll('.ap-quick-btns button').forEach(function(btn){
     var bv=parseFloat(btn.textContent); btn.classList.toggle('active', Math.abs(bv-ap)<0.05);
   });
@@ -3015,7 +3114,8 @@ function render(){
   const slWwr=document.getElementById('sl-wwr'); if(slWwr) slWwr.value=S.wwr;
   setText('v-wwr',S.wwr+'년');
 
-  const H=calcH(ap,null,hj,S.ownH), G=calcG(ap), A=calcA(ap,reg), W=calcW(ap,wh,wj,fut);
+  const H=calcH(ap,null,hj,S.pastH), G=calcG(ap), A=calcA(ap,reg), W=calcW(ap,wh,wj,fut);
+  // calcH: T0(현재까지 보유기간=pastH) 기준 — 지금 증여 시 유상부분 양도세
   const acqTot=A.total+.025;
   const nowTot=H.tax+G.tax+acqTot;
 
@@ -3081,15 +3181,16 @@ function render(){
   // Phase 4 — 이월과세 역산 포함
   const bw=document.getElementById('b-w');
   const isEwase = wh < 10; // 10년 미만 → 이월과세 적용
-  // 이월과세: 배우자 취득가를 본인 취득가(HCOST) 기준으로 역산
-  const W_ewase = isEwase ? calcW(HCOST, wh, wj, fut) : null;
+  // 💡 이월과세 시 장특공 보유기간은 증여자 T0 + 수증자 T1 합산 (소득세법 §95)
+  const ewaseTotalH = (S.pastH || 5) + wh;
+  const W_ewase = isEwase ? calcW(HCOST, ewaseTotalH, wj, fut) : null;
   bw.textContent=W.ex?'비과세':W.tax>0?fmt(W.tax):'없음';
   bw.style.cssText = isEwase ? 'background:rgba(234,88,12,.3);color:#fdba74' : '';
   let rw='';
   if(isEwase){
     // 이월과세 적용 구간 — 두 세액 나란히 표시
     rw+=`<div class="rrow" style="background:rgba(239,68,68,.08);border-left:3px solid #ef4444;padding:8px 12px;margin-bottom:4px">
-      <span style="font-size:11px;font-weight:700;color:#fca5a5">⚠ 이월과세 적용 구간 (보유 ${wh}년 < 10년)</span><br>
+      <span style="font-size:11px;font-weight:700;color:#fca5a5">⚠ 이월과세 적용 구간 (T1: ${wh}년 < 10년 · 장특공은 T0+T1=${ewaseTotalH}년 합산 인정)</span><br>
       <span style="font-size:10px;color:rgba(255,255,255,.5)">증여일로부터 10년 이내 매도 시 ${RECIP_LABELS[S.recip]||'수증자'} 양도세는 <b style="color:#fca5a5">본인 취득가(${HCOST}억) 기준</b>으로 계산됩니다</span>
     </div>`;
     rw+=row('취득가액 (이월과세 적용)', HCOST.toFixed(2)+'억원','red','','본인 실취득가 기준 강제 적용');
@@ -3098,7 +3199,7 @@ function render(){
     const ewGain=W_ewase.gain, nowGain=W.gain;
     rw+=row('양도차익 (이월과세 적용)',ewGain>0?fmt(ewGain):'없음',ewGain>0?'red':'muted','alt',`취득가 ${HCOST}억 기준`);
     if(!W_ewase.ex&&ewGain>0){
-      rw+=row('장기보유특별공제',W_ewase.ltA>0?'-'+fmt(W_ewase.ltA):'없음','green','',pct(W_ewase.ltR)+' (최대 30%)');
+      rw+=row('장기보유특별공제',W_ewase.ltA>0?'-'+fmt(W_ewase.ltA):'없음','green','',pct(W_ewase.ltR)+` (T0+T1: ${ewaseTotalH}년 인정)`);
       rw+=row('과세표준',fmt(W_ewase.tb),'','alt');
       rw+=row('적용세율(지방소득세 포함)',W_ewase.lbl,'','');
     }
@@ -3189,7 +3290,7 @@ function renderChart(reg,hh,hj,wh,wj,fut,curAp,nowTot,acqTot,W){
   const wNetCol=wNet>=0?'#16a34a':'#dc2626';
   const initInv=HCOST+nowTot-DEBT;
   const finalVal=fut-W.tax-DEBT;
-  const cagrRaw=initInv>0&&finalVal>0?(Math.pow(finalVal/initInv,1/S.wh)-1)*100:null;
+  const cagrRaw=initInv>0&&finalVal>0?(Math.pow(finalVal/initInv,1/((S.pastH||5)+S.wh))-1)*100:null; // T0+T1 기준
   const cagrCol=cagrRaw===null?'#94a3b8':cagrRaw>=0?'#1d4ed8':'#dc2626';
   const cagrLbl=cagrRaw===null?'—':(cagrRaw>=0?'+':'')+cagrRaw.toFixed(2)+'%/년';
 
@@ -3209,7 +3310,7 @@ function renderChart(reg,hh,hj,wh,wj,fut,curAp,nowTot,acqTot,W){
     </div>
     <div class="sum-cell highlight-b">
       <div class="sum-lbl" style="color:#1d4ed8">📈 연복리 수익률 (CAGR)</div>
-      <div class="sum-sub">실투자금 ${fmtS(initInv)} → 회수 ${fmtS(finalVal)} / ${S.wh}년</div>
+      <div class="sum-sub">실투자금 ${fmtS(initInv)} → 회수 ${fmtS(finalVal)} / 총 ${(S.pastH||5)+S.wh}년 (T0+T1)</div>
       <div class="sum-val" style="color:${cagrCol}">${cagrLbl}</div>
     </div>
   </div>`;
@@ -3846,7 +3947,6 @@ function movePopup(e) {
     ab=bx;bx.style.display='block';pos(bx,e);
   });
   document.addEventListener('mousemove',function(e){if(ab)pos(ab,e);});
-  // 모바일: 빈 공간 터치 시 툴팁 닫기
   document.addEventListener('touchstart',function(e){
     if(!e.target.closest('.tip-wrap')&&ab){ab.style.display='none';ab=null;}
   });
