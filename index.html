@@ -1720,8 +1720,8 @@ input[type=range]::-webkit-slider-thumb {
       <div class="header-sub">직접 양도 vs 부담부증여 세금·수익률 비교</div>
     </div>
     <div class="header-right">
-      <div class="header-badge">v3 — 지방소득세 10% · 증여세 신고공제 3% · CAGR 실투자금 기준</div>
-      <div style="font-size:10px;color:rgba(255,255,255,.35);margin-top:6px;letter-spacing:.3px;">최종 업데이트 2026.03.14</div>
+      <div class="header-badge">v4 — 공시가 3억 미만 중과배제(§13의2) · 지방소득세 10% · 증여세 신고공제 3% · CAGR 실투자금 기준</div>
+      <div style="font-size:10px;color:rgba(255,255,255,.35);margin-top:6px;letter-spacing:.3px;">최종 업데이트 2026.04.14</div>
     </div>
   </div>
 </div>
@@ -1845,12 +1845,12 @@ input[type=range]::-webkit-slider-thumb {
         <div class="note" id="note-whouse">유상취득(채무분) 세율 — 수증자 주택 수 기준</div>
       </div>
       <div class="ctrl">
-        <div class="ctrl-label"><span>증여자 다주택 여부 <span style="font-weight:400;color:var(--muted2);font-size:10px;">(세대 기준 · 배우자·미혼자녀 합산)</span><span class="tip-wrap"><span class="tip-icon">?</span><span class="tip-box"><b>증여 전</b> 세대 보유 주택 수 기준 (배우자·미혼 30세 미만 자녀 합산)<br><br>📌 <b>예시</b><br>· 세대에 2채 있는데 1채 증여<br>&nbsp;&nbsp;→ 여전히 2주택 세대 → <span style="color:#fca5a5;font-weight:700">12% 중과</span><br>· 세대에 1채뿐인데 그걸 증여<br>&nbsp;&nbsp;→ 1주택 세대 → <span style="color:#86efac;font-weight:700">3.5% 적용</span><br><br>※ 공시가 3억↑ &amp; 조정대상지역일 때 중과 적용</span></span></span></div>
+        <div class="ctrl-label"><span>증여자 다주택 여부 <span style="font-weight:400;color:var(--muted2);font-size:10px;">(세대 기준 · 배우자·미혼자녀 합산)</span><span class="tip-wrap"><span class="tip-icon">?</span><span class="tip-box"><b>증여 전</b> 세대 보유 주택 수 기준 (배우자·미혼 30세 미만 자녀 합산)<br><br>📌 <b>중과 12% 적용 조건 (3개 모두 충족)</b><br>① 세대 기준 다주택<br>② 조정대상지역 내 주택<br>③ <b>시가표준액(공시가격) 3억 원 이상</b><br><br>📌 <b>예시</b><br>· 세대 2채, 공시가 5억 증여<br>&nbsp;&nbsp;→ <span style="color:#fca5a5;font-weight:700">12% 중과</span><br>· 세대 2채, <b>공시가 2.8억</b> 증여<br>&nbsp;&nbsp;→ <span style="color:#86efac;font-weight:700">3.5% 적용</span> (지방세법 §13의2 ② 단서)<br>· 세대 1채 증여<br>&nbsp;&nbsp;→ <span style="color:#86efac;font-weight:700">3.5% 적용</span></span></span></span></div>
         <div class="tgrp">
-          <button class="tbtn on green" onclick="tog('donorMulti','no',this)">1주택</button>
-          <button class="tbtn red" onclick="tog('donorMulti','yes',this)">다주택 (공시가 3억↑)</button>
+          <button class="tbtn on green" onclick="tog('donorMulti','no',this)">1주택 또는 공시가 3억 미만</button>
+          <button class="tbtn red" onclick="tog('donorMulti','yes',this)">다주택 · 공시가 3억↑</button>
         </div>
-        <div class="note">무상취득(증여분) 세율에만 영향 — 유상취득(채무분)과 무관</div>
+        <div class="note">공시가 3억 미만은 다주택이어도 3.5% 적용 (지방세법 §13의2 ② 단서). 유상취득(채무분) 세율과 무관.</div>
       </div>
 
       <div class="sec-title">📋 본인 양도세</div>
